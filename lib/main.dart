@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app7/routes/login_route.dart';
 import 'root.dart';
 import 'routes/Top_route.dart';
 
@@ -14,10 +15,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.blue,
       ),
-      home: RootWidget(),
       initialRoute: '/',
       routes: {
-        //   '/routes/talk_route': (context) => TalkRoute(),
+        '/' : (context) => RootWidget(),
+        '/login_route': (context) => Talk(),
       },
     );
   }
