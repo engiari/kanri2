@@ -28,10 +28,13 @@ class Tile extends StatelessWidget {
           title: Text(this.username), // <- 追加：ユーザ名の設定
           subtitle: Text(this.message), // <- 追加：メッセージの設定
           onTap: () => {
+            /*
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(username: this.username,)))
+
+             */
           },
         ),
       ),
@@ -41,10 +44,13 @@ class Tile extends StatelessWidget {
           color: Colors.blue,
           icon: Icons.flash_off,
           onTap: () => {
+            /*
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(username: this.username,)))
+
+             */
           }, // _showSnackBar('Archive'),
         ),
 
@@ -52,10 +58,13 @@ class Tile extends StatelessWidget {
           color: Colors.indigo,
           icon: Icons.volume_off,
           onTap: () => {
+            /*
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(username: this.username,)))
+
+             */
           }, // _showSnackBar('Share'),
         ),
       ],
@@ -68,10 +77,13 @@ class Tile extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           ),
           onTap: () => {
+            /*
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(username: this.username,)))
+
+             */
           }, // _showSnackBar('More'),
         ),
 
@@ -82,10 +94,13 @@ class Tile extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           ),
           onTap: () => {
+            /*
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(username: this.username,)))
+
+             */
           }, // _showSnackBar('Delete'),
         ),
       ],

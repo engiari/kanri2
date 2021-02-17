@@ -50,7 +50,7 @@ class Top extends StatelessWidget {
 
               Container(
                 child: RaisedButton(
-                  onPressed: () => Navigator.of(context).pushNamed("login_route"), child: Text('　　　ログイン　　　'),
+                  onPressed: () => Navigator.of(context).pushNamed("/login_route"), child: Text('　　　ログイン　　　'),
                 ),
               ),
             ],
