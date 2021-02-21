@@ -1,4 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 class Top extends StatelessWidget {
@@ -49,8 +48,8 @@ class Top extends StatelessWidget {
                     child: Container(
                       child: RaisedButton(
                         onPressed: () {
-                          FirebaseCrashlytics.instance.crash();
-                          Navigator.of(context).pushNamed("/login_route");
+                          //FirebaseCrashlytics.instance.crash();
+                          Navigator.of(context).pushNamedAndRemoveUntil("/home", ModalRoute.withName(null));
                         },
                         child: Text('ログイン'),
                       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../tile.dart';
+import 'util/tile.dart';
 
 class Talk extends StatelessWidget {
 

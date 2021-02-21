@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/routes/login_route.dart';
-import 'root.dart';
-import 'routes/Top_route.dart';
+import 'package:flutter_app7/screen/routes/root.dart';
+import 'package:flutter_app7/screen/top_route.dart';
+import 'file:///D:/Project/todu/kanri2/lib/screen/login_route.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,8 @@ class App extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => RootWidget(),
+        '/': (context) => Top(),
+        '/home': (context) => RootWidget(),
         '/login_route': (context) => Talk(),
       },
     );

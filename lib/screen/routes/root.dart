@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app7/screen/routes/info_route.dart';
 
 // 各ページ
-import 'routes/Top_route.dart';
 
 class RootWidget extends StatefulWidget {
   RootWidget({Key key}) : super(key: key);
@@ -33,12 +33,12 @@ class _RootWidgetState extends State<RootWidget> {
   ];
 
   var _routes = [
-    Top(),
-    Top(), //Home(),
-    Top(), //Feed(),
-    Top(), //Diary(),
-    Top(), //Group(),
-    Top(), //Info(),
+    Info(),
+    Info(), //Home(),
+    Info(), //Feed(),
+    Info(), //Diary(),
+    Info(), //Group(),
+    Info(), //Info(),
   ];
 
   @override
