@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "631133338729",
+    "project_id": "login-1129c",
+    "storage_bucket": "login-1129c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631133338729:android:38a9a1458f55aedb72f6f8",
+        "android_client_info": {
+          "package_name": "com.example.kanri2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631133338729-a5b06p5301l03c8c5b01msm14nip4vv5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7gLE01XUiiuHBjWet9mF0oDMx_If2z50"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631133338729-a5b06p5301l03c8c5b01msm14nip4vv5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "631133338729-ebie7tnb5p36go62p4iess0g2st3u0cu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lag.kanri"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

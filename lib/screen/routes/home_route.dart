@@ -1,13 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../tile.dart';
+import 'package:flutter_app7/screen/util/tile.dart';
 
-class Talk extends StatelessWidget {
-
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("ログイン"),
+        title: Text("食事栄養管理アプリ BBF"),
       ),
 
       body: ListView(
