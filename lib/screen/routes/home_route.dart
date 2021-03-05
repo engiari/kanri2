@@ -1,8 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/screen/util/tile.dart';
+import 'package:flutter_app7/screen/util/login_model.dart';
+import 'package:flutter_app7/screen/util/shared_data_controller.dart';
 
 class Home extends StatelessWidget {
+  LoginModel get sharedData => SharedDataController().getData();
+  Query query =
+  FirebaseFirestore.instance.collection('user');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,11 +19,16 @@ class Home extends StatelessWidget {
       body: ListView(
         // padding: const EdgeInsets.all(8),
         children: <Widget>[
-          Tile(
-            icon: Icons.person,
-            username: "名前",
-            message: "メールアドレス",
+          Text(
+              sharedData.userName,
+              style: Theme.of(context).textTheme.headline4,
+
           ),
+          RaisedButton(onPressed: () async {
+            await query.get().then((querySnapshot) async {
+              print (querySnapshot.docs.first.data());
+            });
+          })
         ],
       ),
     );
