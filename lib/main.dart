@@ -5,12 +5,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/util/login_route.dart';
 import 'package:flutter_app7/screen/routes/root.dart';
+import 'package:flutter_app7/screen/util/shared_data_controller.dart';
 import 'package:flutter_app7/screen/util/signup_route.dart';
 import 'package:flutter_app7/screen/top_route.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
+  await SharedDataController.init();
   runZonedGuarded(() {
     runApp(App());
   }, (error, stackTrace) {
@@ -20,6 +22,7 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  String userid = SharedDataController().getData().userId;
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +32,13 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: userid != null && userid != "" ? "/home_route" : "/",
       routes: {
         '/': (context) => Top(),
-        '/home': (context) => RootWidget(),
+        '/home_route': (context) => RootWidget(),
         '/login_route': (context) => LoginPage(),
         '/signup_route': (context) => SignUpPage(),
       },
     );
   }
 }
-

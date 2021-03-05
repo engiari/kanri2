@@ -33,6 +33,8 @@ dependencies:
   firebase_auth: ^0.20.1
   cloud_firestore: ^0.16.0+1
   provider: ^4.3.3
+  shared_preferences: any
+  flutter_simple_customize_calendar: ^1.0.1
 
 dev_dependencies:
   flutter_test:
