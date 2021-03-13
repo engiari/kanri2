@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/routes/info_route.dart';
 
 import 'diary_route.dart';
+import 'feed_route.dart';
 import 'home_route.dart';
 
 // 各ページ
@@ -37,7 +38,7 @@ class _RootWidgetState extends State<RootWidget> {
 
   var _routes = [
     Home(),
-    Info(), //Feed(),
+    Feed(),
     CustomContainerExample(), //Diary(),
     Info(), //Group(),
     Info(), //Info(),

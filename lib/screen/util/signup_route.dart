@@ -22,7 +22,7 @@ class SignUpPage extends StatelessWidget {
                 children: <Widget>[
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'example@kboy.com',
+                      hintText: 'sample@example.com',
                     ),
                     controller: mailController,
                     onChanged: (text) {
