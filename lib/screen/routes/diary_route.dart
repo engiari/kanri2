@@ -38,8 +38,8 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           style.putIfAbsent(
               i,
               () => TextStyle(
-                // 平日になる日の色
-              color: Colors.black,
+                    // 平日になる日の色
+                    color: Colors.black,
                     fontSize: 15,
                   ));
           break;
@@ -99,7 +99,6 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                   ? Colors.blue
                   : Colors.transparent,
             ),
-
             child: Stack(
               children: <Widget>[
                 // 当月以外の日の設定
@@ -120,7 +119,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                   ),
                 ),
                 showDate ==
-                    // 今日の日付から２日後
+                        // 今日の日付から２日後
                         DateTime(DateTime.now().year, DateTime.now().month,
                             DateTime.now().day + 2)
                     ? Align(
@@ -182,11 +181,42 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
             color: Colors.black12,
           ),
           weekdayTextStyle: setWeekdayTextStyle(),
+          // 日付をタップした時の動作
           onDayPressed: (DateTime date) {
             print(date);
             setState(() {
               targetDay = date;
             });
+            showDialog(
+              context: context,
+              builder: (context) {
+                return SimpleDialog(
+                  title: Text("コンディション"),
+                  children: <Widget>[
+                    SimpleDialogOption(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("食事メニュー"),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("体調"),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("疲労度"),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("食欲"),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("便"),
+                    ),
+                  ],
+                );
+              },
+            );
           },
           dayWidget: _getDayContainer,
           headerWidget: _getHeader,
