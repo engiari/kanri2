@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_customize_calendar/flutter_simple_customize_calendar.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -8,6 +9,33 @@ class CustomContainerExample extends StatefulWidget {
 }
 
 class _CustomContainerExampleState extends State<CustomContainerExample> {
+  CollectionReference query = FirebaseFirestore.instance.collection('feed');
+
+  class GetUserName extends StatelessWidget {
+  final String documentId;
+
+  GetUserName(this.documentId);
+
+  return FutureBuilder<DocumentSnapshot>(
+  future: users.doc(documentId).get(),
+  builder:
+  (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+  if (snapshot.hasError) {
+  return Text("Something went wrong");
+  }
+
+  if (snapshot.connectionState == ConnectionState.done) {
+  Map<String, dynamic> data = snapshot.data.data();
+  return Text("Full Name: ${data['full_name']} ${data['last_name']}");
+  }
+
+  return Text("loading");
+  },
+  );
+  }
+  }
+
   DateTime targetDay =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
@@ -187,6 +215,14 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
             setState(() {
               targetDay = date;
             });
+            var formatter = new DateFormat('yyyy/MM/dd');
+
+            query.where("day", isEqualTo: formatter.format(date)).get().then((value) {
+              print(value.docs.first);
+
+            });
+
+            // 日付をタップした時にダイアログ　以下の項目表示
             showDialog(
               context: context,
               builder: (context) {
@@ -221,6 +257,9 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           dayWidget: _getDayContainer,
           headerWidget: _getHeader,
           targetDay: targetDay,
+
+
+
           firstWeekday: 0,
         ),
       ),

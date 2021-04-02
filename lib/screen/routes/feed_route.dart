@@ -22,10 +22,34 @@ class _FeedState extends State<Feed> {
 
   int defecation = 0;
 
-  String _condition = "";
-  String _fatigue = "";
-  String _appetite = "";
-  String _defecation = "";
+  List<String> _meal = [
+    "",
+    "",
+    "",
+  ];
+
+  List<String> _condition = [
+    "",
+    "",
+    "",
+  ];
+  List<String> _fatigue = [
+    "",
+    "",
+    "",
+  ];
+  List<String> _appetite = [
+    "",
+    "",
+    "",
+  ];
+  List<String> _defecation = [
+    "",
+    "",
+    "",
+  ];
+
+  List<bool> stateList = [false, false, false];
 
   // テーブル指定
   CollectionReference query = FirebaseFirestore.instance.collection('feed');
@@ -38,6 +62,120 @@ class _FeedState extends State<Feed> {
     if (meal.isEmpty) {
       throw ('食事メニューを入力してください');
     }
+  }
+
+  Widget radioMenu(int index) {
+    return Column(
+      children: [
+        ListTile(
+          title: TextFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: '食事メニュー',
+            ),
+            maxLines: null,
+            onChanged: (String text) {
+              _meal[index] = text;
+            },
+            validator: (String test) {
+              if (test.isEmpty) {
+                return ('食事メニューを入力してください');
+              }
+              return null;
+            },
+          ),
+          //subtitle: Text("体調"),
+        ),
+        Text("体調"),
+        FormBuilderRadioGroup(
+          onChanged: (text) {
+            _condition[index] = text;
+          },
+          validator: (String text) {
+            if (text == null) {
+              return ('どれかを選択してください');
+            }
+            return null;
+          },
+          options: [
+            "5",
+            "4",
+            "3",
+            "2",
+            "1",
+          ]
+              .map((option) => FormBuilderFieldOption(value: option))
+              .toList(growable: false),
+          name: "体調",
+        ),
+        Text("疲労度"),
+        FormBuilderRadioGroup(
+          onChanged: (text) {
+            _fatigue[index] = text;
+          },
+          validator: (String text) {
+            if (text == null) {
+              return ('どれかを選択してください');
+            }
+            return null;
+          },
+          options: [
+            "5",
+            "4",
+            "3",
+            "2",
+            "1",
+          ]
+              .map((option) => FormBuilderFieldOption(value: option))
+              .toList(growable: false),
+          name: "疲労度",
+        ),
+        Text("食欲"),
+        FormBuilderRadioGroup(
+          onChanged: (text) {
+            _appetite[index] = text;
+          },
+          validator: (String text) {
+            if (text == null) {
+              return ('どれかを選択してください');
+            }
+            return null;
+          },
+          options: [
+            "5",
+            "4",
+            "3",
+            "2",
+            "1",
+          ]
+              .map((option) => FormBuilderFieldOption(value: option))
+              .toList(growable: false),
+          name: "食欲",
+        ),
+        Text("便"),
+        FormBuilderRadioGroup(
+          onChanged: (text) {
+            _defecation[index] = text;
+          },
+          validator: (String text) {
+            if (text == null) {
+              return ('どれかを選択してください');
+            }
+            return null;
+          },
+          options: [
+            "5",
+            "4",
+            "3",
+            "2",
+            "1",
+          ]
+              .map((option) => FormBuilderFieldOption(value: option))
+              .toList(growable: false),
+          name: "便",
+        ),
+      ],
+    );
   }
 
   @override
@@ -54,7 +192,8 @@ class _FeedState extends State<Feed> {
                 if (_formKey.currentState.validate()) {
                   // TODO submit
                   await query.add({
-                    'meal': meal,
+                    'day': formatter.format(DateTime.now().toLocal()),
+                    'meal': _meal,
                     'condition': _condition,
                     'fatigue': _fatigue,
                     'appetite': _appetite,
@@ -69,18 +208,53 @@ class _FeedState extends State<Feed> {
         body: ListView(
           // padding: const EdgeInsets.all(8),
           children: <Widget>[
-            Text(formatter.format(now.toLocal())),
-            Text("本日の食事メニューを入力してください"),
-            Text("朝食"),
+            Container(
+              // 内側余白
+              padding: EdgeInsets.all(1),
+              // 外側余白
+              margin: EdgeInsets.all(1),
+            ),
+            Text(
+              formatter.format(now.toLocal()),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 20.0,
+                // 行間
+                height: 1.1,
+              ),
+            ),
+            Text("本日の食事メニューを入力してください",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20.0,
+                  // 太文字
+                  fontWeight: FontWeight.bold,
+                  // 文字間隔
+                  letterSpacing: 0.0,
+                  // 行間
+                  height: 1.3,
+                )),
+            //Text("朝食"),
 
             /* FlatButton(
               child: Text("朝食"),
               onPressed: () {},
             ),
             */
-
+            Container(
+              // 内側余白
+              padding: EdgeInsets.all(1),
+              // 外側余白
+              margin: EdgeInsets.all(1),
+            ),
             ExpansionPanelList(
-              expansionCallback: (int index, bool isExpanded) {},
+              expansionCallback: (int index, bool isExpanded) {
+                setState(() {
+                  stateList[index] = !isExpanded;
+                });
+              },
               children: [
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) {
@@ -88,27 +262,8 @@ class _FeedState extends State<Feed> {
                       title: Text('朝食'),
                     );
                   },
-                  body: ListTile(
-                    title: TextFormField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '食事メニュー',
-                      ),
-                      maxLines: null,
-                      onChanged: (String text) {
-                        meal = text;
-                      },
-                      validator: (String test) {
-                        if (test.isEmpty) {
-                          return ('食事メニューを入力してください');
-                        }
-                        return null;
-                      },
-                    ),
-                    subtitle: Text("体調"),
-
-                  ),
-                  isExpanded: true,
+                  body: radioMenu(0),
+                  isExpanded: stateList[0],
                 ),
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) {
@@ -116,117 +271,19 @@ class _FeedState extends State<Feed> {
                       title: Text('昼食'),
                     );
                   },
-                  body: ListTile(
-                    title: Text(''),
-                    subtitle: Text(''),
-                  ),
-                  isExpanded: true,
+                  body: radioMenu(1),
+                  isExpanded: stateList[1],
+                ),
+                ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return ListTile(
+                      title: Text('夕食'),
+                    );
+                  },
+                  body: radioMenu(2),
+                  isExpanded: stateList[2],
                 ),
               ],
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '食事メニュー',
-              ),
-              maxLines: null,
-              onChanged: (String text) {
-                meal = text;
-              },
-              validator: (String test) {
-                if (test.isEmpty) {
-                  return ('食事メニューを入力してください');
-                }
-                return null;
-              },
-            ),
-            Text("体調"),
-            FormBuilderRadioGroup(
-              onChanged: (text) {
-                _condition = text;
-              },
-              validator: (String text) {
-                if (text == null) {
-                  return ('どれかを選択してください');
-                }
-                return null;
-              },
-              options: [
-                "5",
-                "4",
-                "3",
-                "2",
-                "1",
-              ]
-                  .map((option) => FormBuilderFieldOption(value: option))
-                  .toList(growable: false),
-              name: "体調",
-            ),
-            Text("疲労度"),
-            FormBuilderRadioGroup(
-              onChanged: (text) {
-                _fatigue = text;
-              },
-              validator: (String text) {
-                if (text == null) {
-                  return ('どれかを選択してください');
-                }
-                return null;
-              },
-              options: [
-                "5",
-                "4",
-                "3",
-                "2",
-                "1",
-              ]
-                  .map((option) => FormBuilderFieldOption(value: option))
-                  .toList(growable: false),
-              name: "疲労度",
-            ),
-            Text("食欲"),
-            FormBuilderRadioGroup(
-              onChanged: (text) {
-                _appetite = text;
-              },
-              validator: (String text) {
-                if (text == null) {
-                  return ('どれかを選択してください');
-                }
-                return null;
-              },
-              options: [
-                "5",
-                "4",
-                "3",
-                "2",
-                "1",
-              ]
-                  .map((option) => FormBuilderFieldOption(value: option))
-                  .toList(growable: false),
-              name: "食欲",
-            ),
-            Text("便"),
-            FormBuilderRadioGroup(
-              onChanged: (text) {
-                _defecation = text;
-              },
-              validator: (String text) {
-                if (text == null) {
-                  return ('どれかを選択してください');
-                }
-                return null;
-              },
-              options: [
-                "5",
-                "4",
-                "3",
-                "2",
-                "1",
-              ]
-                  .map((option) => FormBuilderFieldOption(value: option))
-                  .toList(growable: false),
-              name: "便",
             ),
           ],
         ),
