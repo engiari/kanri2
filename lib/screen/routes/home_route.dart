@@ -20,8 +20,8 @@ class Home extends StatelessWidget {
         // padding: const EdgeInsets.all(8),
         children: <Widget>[
           Text(
-              sharedData.userName,
-              style: Theme.of(context).textTheme.headline4,
+            sharedData.userName,
+            style: Theme.of(context).textTheme.headline4,
 
           ),
           RaisedButton(onPressed: () async {

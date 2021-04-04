@@ -11,33 +11,9 @@ class CustomContainerExample extends StatefulWidget {
 class _CustomContainerExampleState extends State<CustomContainerExample> {
   CollectionReference query = FirebaseFirestore.instance.collection('feed');
 
-  class GetUserName extends StatelessWidget {
-  final String documentId;
-
-  GetUserName(this.documentId);
-
-  return FutureBuilder<DocumentSnapshot>(
-  future: users.doc(documentId).get(),
-  builder:
-  (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-  if (snapshot.hasError) {
-  return Text("Something went wrong");
-  }
-
-  if (snapshot.connectionState == ConnectionState.done) {
-  Map<String, dynamic> data = snapshot.data.data();
-  return Text("Full Name: ${data['full_name']} ${data['last_name']}");
-  }
-
-  return Text("loading");
-  },
-  );
-  }
-  }
 
   DateTime targetDay =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   Map<int, TextStyle> setDayTextStyle() {
     Map<int, TextStyle> style = {};
@@ -47,29 +23,29 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
         case 7:
           style.putIfAbsent(
               i,
-              () => TextStyle(
-                    // 日曜日になる日の色
-                    color: Colors.red,
-                    fontSize: 15,
-                  ));
+                  () => TextStyle(
+                // 日曜日になる日の色
+                color: Colors.red,
+                fontSize: 15,
+              ));
           break;
         case 6:
           style.putIfAbsent(
               i,
-              () => TextStyle(
-                    // 土曜日になる日の色
-                    color: Colors.blue,
-                    fontSize: 15,
-                  ));
+                  () => TextStyle(
+                // 土曜日になる日の色
+                color: Colors.blue,
+                fontSize: 15,
+              ));
           break;
         default:
           style.putIfAbsent(
               i,
-              () => TextStyle(
-                    // 平日になる日の色
-                    color: Colors.black,
-                    fontSize: 15,
-                  ));
+                  () => TextStyle(
+                // 平日になる日の色
+                color: Colors.black,
+                fontSize: 15,
+              ));
           break;
       }
     }
@@ -135,26 +111,26 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                   textColor: showDate.difference(targetDay).inDays == 0
                       ? Colors.white
                       : targetMonthDate.month == showDate.month
-                          ? setDayTextStyle()[showDate.weekday].color
-                          : Colors.grey,
+                      ? setDayTextStyle()[showDate.weekday].color
+                      : Colors.grey,
                   onPressed: disable
                       ? null
                       : () {
-                          onPressed(showDate);
-                        },
+                    onPressed(showDate);
+                  },
                   child: Text(
                     '${showDate.day}',
                   ),
                 ),
                 showDate ==
-                        // 今日の日付から２日後
-                        DateTime(DateTime.now().year, DateTime.now().month,
-                            DateTime.now().day + 2)
+                    // 今日の日付から２日後
+                    DateTime(DateTime.now().year, DateTime.now().month,
+                        DateTime.now().day + 2)
                     ? Align(
-                        // 子Widgetの配置
-                        alignment: Alignment.bottomRight,
-                        //child: Icon(Icons.assignment_ind),
-                      )
+                  // 子Widgetの配置
+                  alignment: Alignment.bottomRight,
+                  //child: Icon(Icons.assignment_ind),
+                )
                     : Container(),
               ],
             ),
@@ -174,8 +150,8 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           onPressed: prevDisable
               ? null
               : () {
-                  onLeftPressed();
-                },
+            onLeftPressed();
+          },
           child: Icon(Icons.arrow_back_ios),
         ),
         Text('${DateFormat.yM('ja').format(currentMonth)}'),
@@ -183,11 +159,35 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           onPressed: nextDisable
               ? null
               : () {
-                  onRightPressed();
-                },
+            onRightPressed();
+          },
           child: Icon(Icons.arrow_forward_ios),
         ),
       ],
+    );
+  }
+
+  Widget makeFutureBuilder() {
+    CollectionReference users = FirebaseFirestore.instance.collection('user');
+    return FutureBuilder<QuerySnapshot>(
+      future: users.get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Scaffold(
+            body: Text("Something went wrong"),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.docs.first.data();
+          return Scaffold(
+            body: Text("Full Name: ${data["userid"]} ${data["username"]}"),
+          );
+        }
+        return Scaffold(
+          body: Text("loading"),
+        );
+      },
     );
   }
 
@@ -226,40 +226,13 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
             showDialog(
               context: context,
               builder: (context) {
-                return SimpleDialog(
-                  title: Text("コンディション"),
-                  children: <Widget>[
-                    SimpleDialogOption(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("食事メニュー"),
-                    ),
-                    SimpleDialogOption(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("体調"),
-                    ),
-                    SimpleDialogOption(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("疲労度"),
-                    ),
-                    SimpleDialogOption(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("食欲"),
-                    ),
-                    SimpleDialogOption(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("便"),
-                    ),
-                  ],
-                );
+                return makeFutureBuilder();
               },
             );
           },
           dayWidget: _getDayContainer,
           headerWidget: _getHeader,
           targetDay: targetDay,
-
-
-
           firstWeekday: 0,
         ),
       ),

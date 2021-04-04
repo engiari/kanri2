@@ -36,6 +36,7 @@ dependencies:
   shared_preferences: any
   flutter_form_builder: ^4.2.0
   intl: any
+  google_sign_in: any
 
   # カレンダー機能
   flutter_simple_customize_calendar: ^1.0.1

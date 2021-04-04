@@ -57,20 +57,20 @@ class _RootWidgetState extends State<RootWidget> {
 
   BottomNavigationBarItem _UpdateActiveState(int index) {
     return BottomNavigationBarItem(
-        icon: Icon(
-          _footerIcons[index],
-          color: Colors.black87,
-        ),
-        label: _footerItemNames[index],);
+      icon: Icon(
+        _footerIcons[index],
+        color: Colors.black87,
+      ),
+      label: _footerItemNames[index],);
   }
 
   BottomNavigationBarItem _UpdateDeactiveState(int index) {
     return BottomNavigationBarItem(
-        icon: Icon(
-          _footerIcons[index],
-          color: Colors.black26,
-        ),
-        label: _footerItemNames[index] ?? "",);
+      icon: Icon(
+        _footerIcons[index],
+        color: Colors.black26,
+      ),
+      label: _footerItemNames[index] ?? "",);
   }
 
   void _onItemTapped(int index) {

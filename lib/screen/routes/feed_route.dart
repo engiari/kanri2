@@ -88,6 +88,7 @@ class _FeedState extends State<Feed> {
         ),
         Text("体調"),
         FormBuilderRadioGroup(
+          wrapAlignment: WrapAlignment.center,
           onChanged: (text) {
             _condition[index] = text;
           },
@@ -178,116 +179,134 @@ class _FeedState extends State<Feed> {
     );
   }
 
+  bool isLording = false;
+
   @override
   Widget build(BuildContext context) {
-    return FormBuilder(
-      key: _formKey,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("今日のコンディション"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("送信"),
-              onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  // TODO submit
-                  await query.add({
-                    'day': formatter.format(DateTime.now().toLocal()),
-                    'meal': _meal,
-                    'condition': _condition,
-                    'fatigue': _fatigue,
-                    'appetite': _appetite,
-                    'defecation': _defecation,
-                  });
-                  //.then((value) => null).catchError(onError).whenComplete(() => null)
-                }
-              },
+    return Stack(
+      children: [
+        FormBuilder(
+          key: _formKey,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text("今日のコンディション"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("送信"),
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      // TODO submit
+                      setState(() {
+                        isLording = true;
+                      });
+                      await query.add({
+                        'day': formatter.format(DateTime.now().toLocal()),
+                        'meal': _meal,
+                        'condition': _condition,
+                        'fatigue': _fatigue,
+                        'appetite': _appetite,
+                        'defecation': _defecation,
+                      }).then((value) => null).whenComplete(() => setState(() {
+                        isLording = false;
+                      }));
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-        body: ListView(
-          // padding: const EdgeInsets.all(8),
-          children: <Widget>[
-            Container(
-              // 内側余白
-              padding: EdgeInsets.all(1),
-              // 外側余白
-              margin: EdgeInsets.all(1),
-            ),
-            Text(
-              formatter.format(now.toLocal()),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 20.0,
-                // 行間
-                height: 1.1,
-              ),
-            ),
-            Text("本日の食事メニューを入力してください",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 20.0,
-                  // 太文字
-                  fontWeight: FontWeight.bold,
-                  // 文字間隔
-                  letterSpacing: 0.0,
-                  // 行間
-                  height: 1.3,
-                )),
-            //Text("朝食"),
+            body: ListView(
+              // padding: const EdgeInsets.all(8),
+              children: <Widget>[
+                Container(
+                  // 内側余白
+                  padding: EdgeInsets.all(1),
+                  // 外側余白
+                  margin: EdgeInsets.all(1),
+                ),
+                Text(
+                  formatter.format(now.toLocal()),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20.0,
+                    // 行間
+                    height: 1.1,
+                  ),
+                ),
+                Text("本日の食事メニューを入力してください",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 20.0,
+                      // 太文字
+                      fontWeight: FontWeight.bold,
+                      // 文字間隔
+                      letterSpacing: 0.0,
+                      // 行間
+                      height: 1.3,
+                    )),
+                //Text("朝食"),
 
-            /* FlatButton(
+                /* FlatButton(
               child: Text("朝食"),
               onPressed: () {},
             ),
             */
-            Container(
-              // 内側余白
-              padding: EdgeInsets.all(1),
-              // 外側余白
-              margin: EdgeInsets.all(1),
-            ),
-            ExpansionPanelList(
-              expansionCallback: (int index, bool isExpanded) {
-                setState(() {
-                  stateList[index] = !isExpanded;
-                });
-              },
-              children: [
-                ExpansionPanel(
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return ListTile(
-                      title: Text('朝食'),
-                    );
-                  },
-                  body: radioMenu(0),
-                  isExpanded: stateList[0],
+                Container(
+                  // 内側余白
+                  padding: EdgeInsets.all(1),
+                  // 外側余白
+                  margin: EdgeInsets.all(1),
                 ),
-                ExpansionPanel(
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return ListTile(
-                      title: Text('昼食'),
-                    );
+                ExpansionPanelList(
+                  expansionCallback: (int index, bool isExpanded) {
+                    setState(() {
+                      stateList[index] = !isExpanded;
+                    });
                   },
-                  body: radioMenu(1),
-                  isExpanded: stateList[1],
-                ),
-                ExpansionPanel(
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return ListTile(
-                      title: Text('夕食'),
-                    );
-                  },
-                  body: radioMenu(2),
-                  isExpanded: stateList[2],
+                  children: [
+                    ExpansionPanel(
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return ListTile(
+                          title: Text('朝食'),
+                        );
+                      },
+                      body: radioMenu(0),
+                      isExpanded: stateList[0],
+                    ),
+                    ExpansionPanel(
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return ListTile(
+                          title: Text('昼食'),
+                        );
+                      },
+                      body: radioMenu(1),
+                      isExpanded: stateList[1],
+                    ),
+                    ExpansionPanel(
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return ListTile(
+                          title: Text('夕食'),
+                        );
+                      },
+                      body: radioMenu(2),
+                      isExpanded: stateList[2],
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+        isLording ? Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.black12,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ) : Container(),
+      ],
     );
   }
 }
