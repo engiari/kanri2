@@ -32,7 +32,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.blue,
       ),
-      initialRoute: userid != null && userid != "" ? "/home_route" : "/",
+      initialRoute: "/",
       routes: {
         '/': (context) => Top(),
         '/home_route': (context) => RootWidget(),

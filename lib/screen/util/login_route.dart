@@ -47,8 +47,7 @@ class LoginPage extends StatelessWidget {
                       try {
                         await model.login();
                         _showDialog(context, 'ログインしました');
-                        Navigator.of(context).pushNamedAndRemoveUntil("/home_route", ModalRoute.withName(null));
-
+                        Navigator.of(context).pushReplacementNamed("/home_route");
                       } catch (e) {
                         _showDialog(context, e.toString());
                       }
