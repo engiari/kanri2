@@ -15,7 +15,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await SharedDataController.init();
-  LoadingNotifier.init();
   runZonedGuarded(() {
     runApp(App());
   }, (error, stackTrace) {
@@ -30,29 +29,30 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ChangeNotifierProvider<LoadingNotifier>.value(
-        value: LoadingNotifier.it<LoadingNotifier>(),
+      home: ChangeNotifierProvider(
+        create:  (context) => LoadingNotifier(),
         child: Consumer<LoadingNotifier>(
+            child: MaterialApp(
+              title: '',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primaryColor: Colors.blue,
+              ),
+              initialRoute: "/",
+              routes: {
+                '/': (context) => Top(),
+                '/home_route': (context) => RootWidget(),
+                '/login_route': (context) => LoginPage(),
+                '/signup_route': (context) => SignUpPage(),
+              },
+            ),
             builder: (context, model, child) {
               print("ccccccccccccccc");
-              print(model);
+              print(model.loadingFlag);
               return Stack(
                 children: [
-                  MaterialApp(
-                    title: '',
-                    debugShowCheckedModeBanner: false,
-                    theme: ThemeData(
-                      primaryColor: Colors.blue,
-                    ),
-                    initialRoute: "/",
-                    routes: {
-                      '/': (context) => Top(),
-                      '/home_route': (context) => RootWidget(),
-                      '/login_route': (context) => LoginPage(),
-                      '/signup_route': (context) => SignUpPage(),
-                    },
-                  ),
-                  model.loading ? Container(
+                  child,
+                  model.loadingFlag ? Container(
                     width: double.infinity,
                     height: double.infinity,
                     color: Colors.grey.shade50,
