@@ -1,6 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Top extends StatelessWidget {
+class Top extends StatefulWidget {
+  @override
+  _TopState createState() => _TopState();
+}
+
+class _TopState extends State<Top> {
+
+  @override
+  void initState() {
+    super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.of(context)
+          .pushReplacementNamed("/home_route"));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

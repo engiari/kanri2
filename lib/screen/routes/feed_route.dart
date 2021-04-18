@@ -111,6 +111,7 @@ class _FeedState extends State<Feed> {
         ),
         Text("疲労度"),
         FormBuilderRadioGroup(
+          wrapAlignment: WrapAlignment.center,
           onChanged: (text) {
             _fatigue[index] = text;
           },
@@ -133,6 +134,7 @@ class _FeedState extends State<Feed> {
         ),
         Text("食欲"),
         FormBuilderRadioGroup(
+          wrapAlignment: WrapAlignment.center,
           onChanged: (text) {
             _appetite[index] = text;
           },
@@ -155,6 +157,7 @@ class _FeedState extends State<Feed> {
         ),
         Text("便"),
         FormBuilderRadioGroup(
+          wrapAlignment: WrapAlignment.center,
           onChanged: (text) {
             _defecation[index] = text;
           },
