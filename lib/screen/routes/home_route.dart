@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/util/login_model.dart';
@@ -20,7 +21,7 @@ class Home extends StatelessWidget {
         // padding: const EdgeInsets.all(8),
         children: <Widget>[
           Text(
-            sharedData.userName,
+            FirebaseAuth.instance.currentUser.email,
             style: Theme.of(context).textTheme.headline4,
 
           ),
