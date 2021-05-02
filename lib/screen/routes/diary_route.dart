@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app7/bloc/diary_bloc.dart';
+import 'package:flutter_app7/screen/util/loading_notifier.dart';
 import 'package:flutter_simple_customize_calendar/flutter_simple_customize_calendar.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:provider/provider.dart';
 
 class CustomContainerExample extends StatefulWidget {
   @override
@@ -166,9 +169,12 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
       ],
     );
   }
+  DiaryBloc diaryBloc;
 
   Widget makeFutureBuilder() {
     CollectionReference users = FirebaseFirestore.instance.collection('user');
+    //CollectionReference users = FirebaseFirestore.instance.collection('user').doc().collection('feed');
+
     return FutureBuilder<QuerySnapshot>(
       future: users.get(),
       builder:
@@ -182,6 +188,8 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           Map<String, dynamic> data = snapshot.data.docs.first.data();
           return Scaffold(
             body: Text("Full Name: ${data["userid"]} ${data["username"]}"),
+            //body: Text("Full Name: ${data["userid"]} ${data["username"]} ${data["day"]}"),
+
           );
         }
         return Scaffold(

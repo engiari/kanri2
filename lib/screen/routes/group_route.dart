@@ -39,8 +39,13 @@ class _GroupState extends State<Group> {
     database.reference().child('counter').once().then((DataSnapshot snapshot) {
       print('Connected to second database and read ${snapshot.value}');
     });
-    database.reference().child('1-2').child('messages').once().then((DataSnapshot snapshot) {
-    messageId = snapshot.value.length - 1;
+    database
+        .reference()
+        .child('1-2')
+        .child('messages')
+        .once()
+        .then((DataSnapshot snapshot) {
+      messageId = snapshot.value.length - 1;
     });
     database.setPersistenceEnabled(true);
     database.setPersistenceCacheSizeBytes(10000000);
@@ -57,15 +62,12 @@ class _GroupState extends State<Group> {
       });
     });
     _messagesSubscription =
-        _messagesRef
-            .limitToLast(10)
-            .onChildAdded
-            .listen((Event event) {
-          print('Child added: ${event.snapshot.value}');
-        }, onError: (Object o) {
-          final DatabaseError error = o as DatabaseError;
-          print('Error: ${error.code} ${error.message}');
-        });
+        _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
+      print('Child added: ${event.snapshot.value}');
+    }, onError: (Object o) {
+      final DatabaseError error = o as DatabaseError;
+      print('Error: ${error.code} ${error.message}');
+    });
   }
 
   @override
@@ -78,13 +80,15 @@ class _GroupState extends State<Group> {
   Future<void> _increment() async {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
-    await _counterRef.runTransaction((MutableData mutableData) async {
+        await _counterRef.runTransaction((MutableData mutableData) async {
       mutableData.value = (mutableData.value ?? 0) + 1;
       return mutableData;
     });
 
     if (transactionResult.committed) {
-      await _messagesRef.push().set(GroupModel(date: DateTime.now(),message: 'テスト',userId: '1').toJson());
+      await _messagesRef.push().set(
+          GroupModel(date: DateTime.now(), message: 'テスト', userId: '1')
+              .toJson());
     } else {
       print('Transaction not committed.');
       if (transactionResult.error != null) {
@@ -97,22 +101,33 @@ class _GroupState extends State<Group> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Database Example'),
+        title: const Text('グループ'),
       ),
       body: Column(
         children: <Widget>[
           Flexible(
-            child: Center(
-              child: _error == null
-                  ? Text(
+            child: Container(
+              color: Colors.green[100],
+              height: 50,
+              child: Center(
+                child: _error == null
+                    ? Text(
+                    ''
+
+                        /*
                 'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
                     'This includes all devices, ever.',
-              )
-                  : Text(
-                'Error retrieving button tap count:\n${_error.message}',
+                 */
+
+                        )
+                    : Text(
+                        'Error retrieving button tap count:\n${_error.message}',
+                      ),
               ),
             ),
           ),
+
+          /*
           ListTile(
             leading: Checkbox(
               onChanged: (bool value) {
@@ -126,6 +141,8 @@ class _GroupState extends State<Group> {
             ),
             title: const Text('Anchor to bottom'),
           ),
+          */
+
           Flexible(
             child: FirebaseAnimatedList(
               key: ValueKey<bool>(_anchorToBottom),
