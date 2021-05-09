@@ -13,6 +13,12 @@ class SignUpPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('新規登録'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed("/");
+            },
+          ),
         ),
         body: Consumer<SignUpModel>(
           builder: (context, model, child) {
@@ -45,6 +51,7 @@ class SignUpPage extends StatelessWidget {
                       try {
                         await model.signUp();
                         _showDialog(context, '登録完了しました');
+                        Navigator.of(context).pushReplacementNamed("/home_route");
                       } catch (e) {
                         _showDialog(context, e.toString());
                       }

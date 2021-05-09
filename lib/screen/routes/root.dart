@@ -4,7 +4,7 @@ import 'package:flutter_app7/screen/routes/info_route.dart';
 
 import 'diary_route.dart';
 import 'feed_route.dart';
-import 'group_route.dart';
+import 'group/group_route.dart';
 import 'home_route.dart';
 
 // 各ページ
