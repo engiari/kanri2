@@ -28,6 +28,8 @@ class _GroupState extends State<Group> {
   DatabaseError _error;
   int messageId;
 
+  get group => null;
+
   @override
   void initState() {
     super.initState();
@@ -62,12 +64,15 @@ class _GroupState extends State<Group> {
       });
     });
     _messagesSubscription =
-        _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
-      print('Child added: ${event.snapshot.value}');
-    }, onError: (Object o) {
-      final DatabaseError error = o as DatabaseError;
-      print('Error: ${error.code} ${error.message}');
-    });
+        _messagesRef
+            .limitToLast(10)
+            .onChildAdded
+            .listen((Event event) {
+          print('Child added: ${event.snapshot.value}');
+        }, onError: (Object o) {
+          final DatabaseError error = o as DatabaseError;
+          print('Error: ${error.code} ${error.message}');
+        });
   }
 
   @override
@@ -80,7 +85,7 @@ class _GroupState extends State<Group> {
   Future<void> _increment() async {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
-        await _counterRef.runTransaction((MutableData mutableData) async {
+    await _counterRef.runTransaction((MutableData mutableData) async {
       mutableData.value = (mutableData.value ?? 0) + 1;
       return mutableData;
     });
@@ -99,35 +104,36 @@ class _GroupState extends State<Group> {
 
   @override
   Widget build(BuildContext context) {
+    var snapshot;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('グループ'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: Container(
-              color: Colors.green[100],
-              height: 50,
-              child: Center(
-                child: _error == null
-                    ? Text(
-                    ''
+        appBar: AppBar(
+          title: const Text('グループ'),
+        ),
+        body: Column(
+            children: <Widget>[
+        Flexible(
+        child: Container(
+            color: Colors.green[100],
+            height: 50,
+            child: Center(
+                child: if (_error == null){
+        ? Text(
+        ''
 
-                        /*
+        /*
                 'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
                     'This includes all devices, ever.',
                  */
 
-                        )
-                    : Text(
-                        'Error retrieving button tap count:\n${_error.message}',
-                      ),
-              ),
-            ),
-          ),
+        )
+            : Text(
+        'Error retrieving button tap count:\n${_error.message}',
+        ),
+        } else { Text('')}
+    ),
+    ),
 
-          /*
+    /*
           ListTile(
             leading: Checkbox(
               onChanged: (bool value) {
@@ -143,36 +149,39 @@ class _GroupState extends State<Group> {
           ),
           */
 
-          Flexible(
-            child: FirebaseAnimatedList(
-              key: ValueKey<bool>(_anchorToBottom),
-              query: _messagesRef,
-              reverse: _anchorToBottom,
-              itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                  Animation<double> animation, int index) {
-                return SizeTransition(
-                  sizeFactor: animation,
-                  child: ListTile(
-                    trailing: IconButton(
-                      onPressed: () =>
-                          _messagesRef.child(snapshot.key).remove(),
-                      icon: const Icon(Icons.delete),
-                    ),
-                    title: Text(
-                      '${snapshot.key}: ${snapshot.value['message'].toString()}',
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _increment,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    Flexible(
+    child: FirebaseAnimatedList(
+    key: ValueKey<bool>(_anchorToBottom),
+    query: _messagesRef,
+    reverse: _anchorToBottom,
+    itemBuilder: (BuildContext context, DataSnapshot snapshot,
+    Animation<double> animation, int index) {
+    return SizeTransition(
+    sizeFactor: animation,
+    child: ListTile(
+    trailing: IconButton(
+    onPressed: () =>
+    _messagesRef.child(snapshot.key).remove(),
+    icon: const Icon(Icons.delete),
+    ),
+    title: Text(
+    '${snapshot.key}: ${snapshot.value['message'].toString()}',
+    ),
+    ),
+    );
+    },
+    ),
+    ),
+    ],
+    ),
+    floatingActionButton: FloatingActionButton(
+    onPressed: _increment,
+    tooltip: 'Increment',
+    child: const Icon(Icons.add
+    )
+    ,
+    )
+    ,
     );
   }
 }

@@ -46,6 +46,7 @@ class LoginBloc {
       loading.setLoading(false);
     } catch (e) {
       print("llllllllllll");
+      loading.setLoading(false);
       controller.sink.addError(e);
     }
   }

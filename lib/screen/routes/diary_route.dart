@@ -14,9 +14,22 @@ class CustomContainerExample extends StatefulWidget {
 class _CustomContainerExampleState extends State<CustomContainerExample> {
   CollectionReference query = FirebaseFirestore.instance.collection('feed');
 
+  DiaryBloc diaryBloc;
 
   DateTime targetDay =
-  DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  var formatter = new DateFormat('yyyy/MM/dd');
+
+  @override
+  void initState() {
+    super.initState();
+    // レイアウトが
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      diaryBloc =
+          DiaryBloc(Provider.of<LoadingNotifier>(context, listen: false));
+      diaryBloc.getMonthData();
+    });
+  }
 
   Map<int, TextStyle> setDayTextStyle() {
     Map<int, TextStyle> style = {};
@@ -26,29 +39,29 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
         case 7:
           style.putIfAbsent(
               i,
-                  () => TextStyle(
-                // 日曜日になる日の色
-                color: Colors.red,
-                fontSize: 15,
-              ));
+              () => TextStyle(
+                    // 日曜日になる日の色
+                    color: Colors.red,
+                    fontSize: 15,
+                  ));
           break;
         case 6:
           style.putIfAbsent(
               i,
-                  () => TextStyle(
-                // 土曜日になる日の色
-                color: Colors.blue,
-                fontSize: 15,
-              ));
+              () => TextStyle(
+                    // 土曜日になる日の色
+                    color: Colors.blue,
+                    fontSize: 15,
+                  ));
           break;
         default:
           style.putIfAbsent(
               i,
-                  () => TextStyle(
-                // 平日になる日の色
-                color: Colors.black,
-                fontSize: 15,
-              ));
+              () => TextStyle(
+                    // 平日になる日の色
+                    color: Colors.black,
+                    fontSize: 15,
+                  ));
           break;
       }
     }
@@ -114,26 +127,26 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                   textColor: showDate.difference(targetDay).inDays == 0
                       ? Colors.white
                       : targetMonthDate.month == showDate.month
-                      ? setDayTextStyle()[showDate.weekday].color
-                      : Colors.grey,
+                          ? setDayTextStyle()[showDate.weekday].color
+                          : Colors.grey,
                   onPressed: disable
                       ? null
                       : () {
-                    onPressed(showDate);
-                  },
+                          onPressed(showDate);
+                        },
                   child: Text(
                     '${showDate.day}',
                   ),
                 ),
                 showDate ==
-                    // 今日の日付から２日後
-                    DateTime(DateTime.now().year, DateTime.now().month,
-                        DateTime.now().day + 2)
+                        // 今日の日付から２日後
+                        DateTime(DateTime.now().year, DateTime.now().month,
+                            DateTime.now().day + 2)
                     ? Align(
-                  // 子Widgetの配置
-                  alignment: Alignment.bottomRight,
-                  //child: Icon(Icons.assignment_ind),
-                )
+                        // 子Widgetの配置
+                        alignment: Alignment.bottomRight,
+                        //child: Icon(Icons.assignment_ind),
+                      )
                     : Container(),
               ],
             ),
@@ -153,8 +166,8 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           onPressed: prevDisable
               ? null
               : () {
-            onLeftPressed();
-          },
+                  onLeftPressed();
+                },
           child: Icon(Icons.arrow_back_ios),
         ),
         Text('${DateFormat.yM('ja').format(currentMonth)}'),
@@ -162,36 +175,38 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           onPressed: nextDisable
               ? null
               : () {
-            onRightPressed();
-          },
+                  onRightPressed();
+                },
           child: Icon(Icons.arrow_forward_ios),
         ),
       ],
     );
   }
-  DiaryBloc diaryBloc;
 
-  Widget makeFutureBuilder() {
-    CollectionReference users = FirebaseFirestore.instance.collection('user');
-    //CollectionReference users = FirebaseFirestore.instance.collection('user').doc().collection('feed');
-
+  Widget makeFutureBuilder(DateTime date) {
     return FutureBuilder<QuerySnapshot>(
-      future: users.get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      future: query.where("day", isEqualTo: formatter.format(date)).get(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Scaffold(
             body: Text("Something went wrong"),
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.docs.first.data();
-          return Scaffold(
-            body: Text("Full Name: ${data["userid"]} ${data["username"]}"),
-            //body: Text("Full Name: ${data["userid"]} ${data["username"]} ${data["day"]}"),
+          if (snapshot.data.docs.isNotEmpty) {
+            Map<String, dynamic> data = snapshot.data.docs.first.data();
+            return Scaffold(
+              body: Text("Full Name: ${data["condition"][0]} ${data["condition"][1]}"),
+              //body: Text("Full Name: ${data["userid"]} ${data["username"]} ${data["day"]}"),
+            );
+          } else {
+            return Scaffold(
+              body: Text("データがありません"),
+            );
 
-          );
+          }
         }
+
         return Scaffold(
           body: Text("loading"),
         );
@@ -223,18 +238,19 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
             setState(() {
               targetDay = date;
             });
-            var formatter = new DateFormat('yyyy/MM/dd');
 
-            query.where("day", isEqualTo: formatter.format(date)).get().then((value) {
+            query
+                .where("day", isEqualTo: formatter.format(date))
+                .get()
+                .then((value) {
               print(value.docs.first);
-
             });
 
             // 日付をタップした時にダイアログ　以下の項目表示
             showDialog(
               context: context,
               builder: (context) {
-                return makeFutureBuilder();
+                return makeFutureBuilder(date);
               },
             );
           },

@@ -16,12 +16,13 @@ class DiaryBloc {
   final CollectionReference query =
   FirebaseFirestore.instance.collection('feed');
 
-  final formatter = new DateFormat('yyyy/MM/dd');
+  final formatter = new DateFormat('yyyy/MM');
 
   DiaryBloc(this.loading);
 
   referenceDiary({day, meal, condition, fatigue, appetite, defecation}) {
     // TODO submit
+    
 
     loading.setLoading(true);
     query
@@ -44,5 +45,11 @@ class DiaryBloc {
             textColor: Colors.white,
             fontSize: 16.0))
         .whenComplete(() => loading.setLoading(false));
+  }
+  
+  getMonthData(){
+    DateTime now = DateTime.now();
+    query.orderBy("day").startAt([formatter.format(now)]).get().then((value) => print(value.docs.length));
+
   }
 }

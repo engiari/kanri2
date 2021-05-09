@@ -82,9 +82,6 @@ class _FeedState extends State<Feed> {
               _meal[index] = text;
             },
             validator: (String test) {
-              if (test.isEmpty) {
-                return ('食事メニューを入力してください');
-              }
               return null;
             },
           ),
