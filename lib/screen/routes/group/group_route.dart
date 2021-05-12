@@ -11,7 +11,7 @@ import 'package:flutter_app7/screen/util/group_model.dart';
 
 import 'add_group.dart';
 
-enum TYPE { home, search}
+enum TYPE {home, search}
 
 class Group extends StatefulWidget {
   const Group({Key key, @required this.app}) : super(key: key);
@@ -95,6 +95,7 @@ class _GroupState extends State<Group> {
       case TYPE.home:
         return Column(
           children: <Widget>[
+            // グループ名の表示
             Text('Group1'),
             Text('Group2'),
             Text('Group3'),

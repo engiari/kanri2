@@ -6,6 +6,8 @@ import 'package:flutter_app7/screen/util/loading_notifier.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -13,6 +15,27 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
+
+  File _image;
+  final picker = ImagePicker();
+
+  Future getImageFromCamera() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+  }
+
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+  }
+
+
   final _formKey = GlobalKey<FormBuilderState>();
 
   int timeframe = 0;
@@ -314,6 +337,7 @@ class _FeedState extends State<Feed> {
                   },
                   body: radioMenu(0),
                   isExpanded: stateList[0],
+
                 ),
                 /*
                 ExpansionPanel(
@@ -337,6 +361,36 @@ class _FeedState extends State<Feed> {
 
                  */
               ],
+            ),
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        width: 300,
+                        child: _image == null
+                            ? Text('No image selected.')
+                            : Image.file(_image)),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      FloatingActionButton(
+                        onPressed: getImageFromCamera, //カメラから画像を取得
+                        tooltip: 'Pick Image From Camera',
+                        child: Icon(Icons.add_a_photo),
+                      ),
+                      FloatingActionButton(
+                        onPressed: getImageFromGallery, //ギャラリーから画像を取得
+                        tooltip: 'Pick Image From Gallery',
+                        child: Icon(Icons.photo_library),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
             FlatButton(
               color: Colors.blue,

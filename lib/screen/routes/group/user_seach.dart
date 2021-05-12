@@ -22,7 +22,7 @@ class _UserSearchState extends State<UserSearch> {
   _searchUser() {
     if (targetEmail.isEmpty) {
       setState(() {
-        error = "Emailを入力してください。";
+        error = "Emailを入力してください";
       });
       return;
     }
@@ -61,7 +61,14 @@ class _UserSearchState extends State<UserSearch> {
       case ADD_GROUP_TYPE.search:
         return Column(
           children: [
-            error != null && error != '' ? Text(error) : Container(),
+            error != null && error != ''
+                ? Text(
+                    error,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  )
+                : Container(),
             TextField(
               decoration: InputDecoration(
                 hintText: 'sample@example.com',
