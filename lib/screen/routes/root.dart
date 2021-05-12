@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/routes/info_route.dart';
+import 'package:flutter_app7/screen/routes/setting_route.dart';
 
 import 'diary_route.dart';
 import 'feed_route.dart';
 import 'group/group_route.dart';
 import 'home_route.dart';
+import 'setting_route.dart';
+
 
 // 各ページ
 
@@ -27,6 +30,7 @@ class _RootWidgetState extends State<RootWidget> {
     Icons.auto_stories,
     Icons.people_outlined,
     Icons.error,
+    Icons.miscellaneous_services,
   ];
 
   static const _footerItemNames = [
@@ -35,6 +39,7 @@ class _RootWidgetState extends State<RootWidget> {
     'ダイアリー',
     'グループ',
     'お知らせ',
+    '設定',
   ];
 
   var _routes = [
@@ -42,7 +47,8 @@ class _RootWidgetState extends State<RootWidget> {
     Feed(),
     CustomContainerExample(), //Diary(),
     Group(),
-    Info(), //Info(),
+    Info(),
+    Setting(),
   ];
 
   @override

@@ -15,6 +15,8 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   final _formKey = GlobalKey<FormBuilderState>();
 
+  int timeframe = 0;
+
   String meal = '';
 
   int condition = 0;
@@ -24,6 +26,12 @@ class _FeedState extends State<Feed> {
   int appetite = 0;
 
   int defecation = 0;
+
+  List<String> _timeframe = [
+    "",
+    "",
+    "",
+  ];
 
   List<String> _meal = [
     "",
@@ -52,7 +60,7 @@ class _FeedState extends State<Feed> {
     "",
   ];
 
-  List<bool> stateList = [false, false, false];
+  List<bool> stateList = [true, false, false];
 
   // テーブル指定
 
@@ -71,6 +79,27 @@ class _FeedState extends State<Feed> {
   Widget radioMenu(int index) {
     return Column(
       children: [
+        Text("時間帯"),
+        FormBuilderRadioGroup(
+          wrapAlignment: WrapAlignment.center,
+          onChanged: (text) {
+            _timeframe[index] = text;
+          },
+          validator: (String text) {
+            if (text == null) {
+              return ('どれかを選択してください');
+            }
+            return null;
+          },
+          options: [
+            "朝",
+            "昼",
+            "夜",
+          ]
+              .map((option) => FormBuilderFieldOption(value: option))
+              .toList(growable: false),
+          name: "時間帯",
+        ),
         ListTile(
           title: TextFormField(
             decoration: InputDecoration(
@@ -193,12 +222,14 @@ class _FeedState extends State<Feed> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("今日のコンディション"),
+          /*
           actions: <Widget>[
             FlatButton(
               child: Text("送信"),
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  feedBloc.sendFeed(meal: _meal,
+                  feedBloc.sendFeed(
+                      meal: _meal,
                       condition: _condition,
                       fatigue: _fatigue,
                       appetite: _appetite,
@@ -207,6 +238,8 @@ class _FeedState extends State<Feed> {
               },
             ),
           ],
+
+           */
         ),
         body: ListView(
           // padding: const EdgeInsets.all(8),
@@ -227,7 +260,8 @@ class _FeedState extends State<Feed> {
                 height: 1.1,
               ),
             ),
-            Text("本日の食事メニューを入力してください",
+            /*
+            Text("食事メニューを入力してください",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.red,
@@ -241,6 +275,8 @@ class _FeedState extends State<Feed> {
                 )),
             //Text("朝食"),
 
+             */
+
             /* FlatButton(
               child: Text("朝食"),
               onPressed: () {},
@@ -252,6 +288,7 @@ class _FeedState extends State<Feed> {
               // 外側余白
               margin: EdgeInsets.all(1),
             ),
+            Container(),
             ExpansionPanelList(
               expansionCallback: (int index, bool isExpanded) {
                 setState(() {
@@ -262,12 +299,23 @@ class _FeedState extends State<Feed> {
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) {
                     return ListTile(
-                      title: Text('朝食'),
+                      title: Text('食事内容とお身体の状態を入力してください',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 20.0,
+                            // 太文字
+                            fontWeight: FontWeight.bold,
+                            // 文字間隔
+                            letterSpacing: 0.0,
+                            // 行間
+                            height: 1.3,
+                          )),
                     );
                   },
                   body: radioMenu(0),
                   isExpanded: stateList[0],
                 ),
+                /*
                 ExpansionPanel(
                   headerBuilder: (BuildContext context, bool isExpanded) {
                     return ListTile(
@@ -286,7 +334,32 @@ class _FeedState extends State<Feed> {
                   body: radioMenu(2),
                   isExpanded: stateList[2],
                 ),
+
+                 */
               ],
+            ),
+            FlatButton(
+              color: Colors.blue,
+
+              child:
+              Text("記録する",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    // 太文字
+                    fontWeight: FontWeight.bold,
+                  )),
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  feedBloc.sendFeed(
+                      timeframe: _timeframe,
+                      meal: _meal,
+                      condition: _condition,
+                      fatigue: _fatigue,
+                      appetite: _appetite,
+                      defecation: _defecation);
+                }
+              },
             ),
           ],
         ),

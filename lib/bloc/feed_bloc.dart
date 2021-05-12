@@ -20,13 +20,14 @@ class FeedBloc {
 
   FeedBloc(this.loading);
 
-  sendFeed({meal, condition, fatigue, appetite, defecation}) {
+  sendFeed({timeframe, meal, condition, fatigue, appetite, defecation}) {
     // TODO submit
 
     loading.setLoading(true);
     query
         .add({
           'day': formatter.format(DateTime.now().toLocal()),
+          'timeframe': timeframe,
           'meal': meal,
           'condition': condition,
           'fatigue': fatigue,
@@ -41,8 +42,7 @@ class FeedBloc {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0))
-    .onError((error, stackTrace) =>
-        Fluttertoast.showToast(
+        .onError((error, stackTrace) => Fluttertoast.showToast(
             msg: "送信失敗しました",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,

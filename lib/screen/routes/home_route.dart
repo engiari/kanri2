@@ -25,11 +25,15 @@ class Home extends StatelessWidget {
             style: Theme.of(context).textTheme.headline4,
 
           ),
+
+          /*
           RaisedButton(onPressed: () async {
             await query.get().then((querySnapshot) async {
               print (querySnapshot.docs.first.data());
             });
           })
+           */
+
         ],
       ),
     );
