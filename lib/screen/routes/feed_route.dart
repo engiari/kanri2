@@ -139,6 +139,34 @@ class _FeedState extends State<Feed> {
           ),
           //subtitle: Text("体調"),
         ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: 300,
+                  child: _image == null
+                      ? Text('No image selected.')
+                      : Image.file(_image)),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                FloatingActionButton(
+                  onPressed: getImageFromCamera, //カメラから画像を取得
+                  tooltip: 'Pick Image From Camera',
+                  child: Icon(Icons.add_a_photo),
+                ),
+                FloatingActionButton(
+                  onPressed: getImageFromGallery, //ギャラリーから画像を取得
+                  tooltip: 'Pick Image From Gallery',
+                  child: Icon(Icons.photo_library),
+                ),
+              ],
+            )
+          ],
+        ),
         Text("体調"),
         FormBuilderRadioGroup(
           wrapAlignment: WrapAlignment.center,
@@ -361,36 +389,6 @@ class _FeedState extends State<Feed> {
 
                  */
               ],
-            ),
-            Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                        width: 300,
-                        child: _image == null
-                            ? Text('No image selected.')
-                            : Image.file(_image)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      FloatingActionButton(
-                        onPressed: getImageFromCamera, //カメラから画像を取得
-                        tooltip: 'Pick Image From Camera',
-                        child: Icon(Icons.add_a_photo),
-                      ),
-                      FloatingActionButton(
-                        onPressed: getImageFromGallery, //ギャラリーから画像を取得
-                        tooltip: 'Pick Image From Gallery',
-                        child: Icon(Icons.photo_library),
-                      ),
-                    ],
-                  )
-                ],
-              ),
             ),
             FlatButton(
               color: Colors.blue,
