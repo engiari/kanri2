@@ -363,6 +363,8 @@ class _FeedState extends State<Feed> {
                           )),
                     );
                   },
+                  // ↓ここでradioMenuのみの表示になっているのでColumn等を利用して
+                  //　367にあるImagePicker部分をここに表示させられる様にすると上手く行くと思います。
                   body: radioMenu(0),
                   isExpanded: stateList[0],
 
