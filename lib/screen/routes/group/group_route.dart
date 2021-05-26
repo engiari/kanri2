@@ -6,12 +6,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/screen/routes/group/user_seach.dart';
+import 'package:flutter_app7/bloc/group_bloc.dart';
+import 'package:flutter_app7/model/user_data.dart';
 import 'package:flutter_app7/screen/util/group_model.dart';
+import 'package:flutter_app7/screen/util/loading_notifier.dart';
+import 'package:provider/provider.dart';
 
 import 'add_group.dart';
 
-enum TYPE {home, search}
+enum TYPE { home, search }
 
 class Group extends StatefulWidget {
   const Group({Key key, @required this.app}) : super(key: key);
@@ -24,10 +27,15 @@ class Group extends StatefulWidget {
 
 class _GroupState extends State<Group> {
   TYPE pageType = TYPE.home;
+  final textController = TextEditingController();
+  String searchEmail = '';
+  GroupBloc groupBloc;
+  String error = '';
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   @override
@@ -37,17 +45,71 @@ class _GroupState extends State<Group> {
 
   @override
   Widget build(BuildContext context) {
+    groupBloc = GroupBloc(Provider.of<LoadingNotifier>(context, listen: false));
     return Scaffold(
       appBar: AppBar(
         title: const Text('グループ'),
-        leading: pageType != TYPE.home ? IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-          onPressed: backOperation(),
-        ) : null,
+        leading: pageType != TYPE.home
+            ? IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                ),
+                onPressed: null,
+              )
+            : null,
       ),
-      body: buildWidget(),
+      body: Column(
+        children: <Widget>[
+          // グループ名の表示
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'メールアドレスを入力してください',
+            ),
+            controller: textController,
+            onChanged: (text) {
+              searchEmail = text;
+            },
+          ),
+          Text(error),
+          FlatButton(
+            color: Colors.blue,
+            child: Text("検索する",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  // 太文字
+                  fontWeight: FontWeight.bold,
+                )),
+            onPressed: () async {
+              if (searchEmail.isEmpty) {
+                setState(() {
+                  error = "Emailを入力してください";
+                });
+                return;
+              }
+              setState(() {
+                error = "";
+              });
+              groupBloc.searchUser(searchEmail);
+            },
+          ),
+          StreamBuilder<UserData>(
+            stream: groupBloc.controller.stream,
+            builder: (context, snapshot) {
+              Widget errorWidget = Container();
+              if (snapshot.hasError)
+                errorWidget =
+                    Text(snapshot.error,
+                        style: TextStyle(color: Colors.red)
+                    );
+              if (snapshot.hasData) return Text(snapshot.data.email);
+              return Container();
+            },
+          ),
+        ],
+      ),
+
+      /*
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -56,6 +118,8 @@ class _GroupState extends State<Group> {
         },
         child: const Icon(Icons.add),
       ),
+
+       */
     );
 
     /*
@@ -73,42 +137,5 @@ class _GroupState extends State<Group> {
             title: const Text('Anchor to bottom'),
           ),
           */
-  }
-
-  Function backOperation() {
-    switch (pageType) {
-      case TYPE.search:
-        return () {
-          setState(() {
-            pageType = TYPE.home;
-          });
-        };
-        break;
-      default:
-        return null;
-        break;
-    }
-  }
-
-  Widget buildWidget() {
-    switch (pageType) {
-      case TYPE.home:
-        return Column(
-          children: <Widget>[
-            // グループ名の表示
-            Text('Group1'),
-            Text('Group2'),
-            Text('Group3'),
-            Text('Group4'),
-          ],
-        );
-        break;
-      case TYPE.search:
-        return UserSearch();
-        break;
-      default:
-        return Container();
-        break;
-    }
   }
 }

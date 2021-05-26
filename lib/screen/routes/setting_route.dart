@@ -7,7 +7,6 @@ import 'package:flutter_app7/screen/util/login_route.dart';
 import 'package:flutter_app7/screen/util/shared_data_controller.dart';
 
 import 'group/group_route.dart';
-import 'group/user_seach.dart';
 
 class Setting extends StatelessWidget {
   LoginModel get sharedData => SharedDataController().getData();
