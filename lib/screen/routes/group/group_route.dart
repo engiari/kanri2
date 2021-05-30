@@ -45,7 +45,10 @@ class _GroupState extends State<Group> {
 
   @override
   Widget build(BuildContext context) {
-    groupBloc = GroupBloc(Provider.of<LoadingNotifier>(context, listen: false));
+    if (groupBloc == null) {
+      groupBloc =
+          GroupBloc(Provider.of<LoadingNotifier>(context, listen: false));
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('グループ'),
@@ -102,7 +105,14 @@ class _GroupState extends State<Group> {
                     Text(snapshot.error,
                         style: TextStyle(color: Colors.red)
                     );
-              if (snapshot.hasData) return Text(snapshot.data.email);
+              if (snapshot.hasData) return Column(
+                children: [Text(snapshot.data.email),
+                TextButton(onPressed: (){
+                  groupBloc.sendGroup(userData: snapshot.data);
+                  print("data");
+                  print(snapshot.data.email);
+                }, child: Text('追加'))],
+              );
               return Container();
             },
           ),

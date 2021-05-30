@@ -47,7 +47,7 @@ class App extends StatelessWidget {
               },
             ),
             builder: (context, model, child) {
-              print("ccccccccccccccc");
+              // print("ccccccccccccccc");
               print(model.loadingFlag);
               return Stack(
                 children: [

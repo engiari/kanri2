@@ -38,48 +38,25 @@ class _FeedState extends State<Feed> {
 
   final _formKey = GlobalKey<FormBuilderState>();
 
-  int timeframe = 0;
 
   String meal = '';
 
-  int condition = 0;
-
-  int fatigue = 0;
-
-  int appetite = 0;
-
-  int defecation = 0;
-
   List<String> _timeframe = [
-    "",
-    "",
-    "",
+  "",
   ];
-
   List<String> _meal = [
     "",
-    "",
-    "",
   ];
-
   List<String> _condition = [
-    "",
-    "",
     "",
   ];
   List<String> _fatigue = [
     "",
-    "",
-    "",
   ];
   List<String> _appetite = [
     "",
-    "",
-    "",
   ];
   List<String> _defecation = [
-    "",
-    "",
     "",
   ];
 
@@ -103,6 +80,7 @@ class _FeedState extends State<Feed> {
     return Column(
       children: [
         Text("時間帯"),
+
         FormBuilderRadioGroup(
           wrapAlignment: WrapAlignment.center,
           onChanged: (text) {
@@ -112,8 +90,10 @@ class _FeedState extends State<Feed> {
             if (text == null) {
               return ('どれかを選択してください');
             }
+
             return null;
           },
+
           options: [
             "朝",
             "昼",

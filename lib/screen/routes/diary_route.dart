@@ -201,7 +201,19 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
             );
           } else {
             return Scaffold(
-              body: Text("データがありません"),
+              body: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text("登録がありません",style: TextStyle(fontSize: 20.0),),
+                    RaisedButton(
+                      child: Text('戻る'),
+                      onPressed: () =>
+                          Navigator.of(context).pop('戻る'),
+                    ),
+                  ],
+                ),
+              ),
             );
 
           }
