@@ -12,7 +12,8 @@ import 'package:intl/intl.dart';
 
 class GroupBloc {
   final StreamController<UserData> controller = StreamController<UserData>();
-  final StreamController<List<dynamic>> groupListController = StreamController<List<dynamic>>();
+  final StreamController<List<dynamic>> groupListController =
+      StreamController<List<dynamic>>();
   final LoadingNotifier loading;
 
   GroupBloc(this.loading);
@@ -23,32 +24,39 @@ class GroupBloc {
 
     query
         .where("email",
-        isEqualTo: searchEmail,
-        isNotEqualTo: FirebaseAuth.instance.currentUser.email)
+            isEqualTo: searchEmail,
+            isNotEqualTo: FirebaseAuth.instance.currentUser.email)
         .get()
         .then((value) {
       UserData userData = UserData(
           uid: value.docs.first.data()['uid'],
           displayName: value.docs.first.data()['displayName'],
           email: value.docs.first.data()['email'],
-          documentId: value.docs.first.id
-      );
+          documentId: value.docs.first.id);
       controller.sink.add(userData);
     }).whenComplete(() => loading.setLoading(false));
   }
+
   sendGroup({UserData userData}) async {
     // TODO submit
     LoginModel data = SharedDataController().getData();
     final CollectionReference query =
-    FirebaseFirestore.instance.collection('group');
+        FirebaseFirestore.instance.collection('group');
 
     loading.setLoading(true);
-    final myData = await FirebaseFirestore.instance.collection("user").doc(data.userDocument).get();
-    final targetData = await FirebaseFirestore.instance.collection("user").doc(userData.documentId).get();
+    final myData = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(data.userDocument)
+        .get();
+    final targetData = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(userData.documentId)
+        .get();
 
     final List<dynamic> eachGroupList = [];
     (myData.data()["group_list"] as List<dynamic>).forEach((e) {
-      eachGroupList.add((targetData.data()["group_list"] as List<dynamic>).firstWhere((element) => e == element));
+      eachGroupList.add((targetData.data()["group_list"] as List<dynamic>)
+          .firstWhere((element) => e == element));
     });
 
     bool duplicate = false;
@@ -61,41 +69,35 @@ class GroupBloc {
 
     if (duplicate) {
       Fluttertoast.showToast(
-          msg: "グループが既に存在します",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 16.0).whenComplete(() => loading.setLoading(false));
+              msg: "グループが既に存在します",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.blue,
+              textColor: Colors.white,
+              fontSize: 16.0)
+          .whenComplete(() => loading.setLoading(false));
     } else {
       query
           .add({
-        'uid_list': [
-          FirebaseAuth.instance.currentUser.uid, userData.uid
-        ],
-      }).then((value) {
-        FirebaseFirestore.instance.collection('user')
-            .doc(userData.documentId)
-            .set(
-            {
+            'uid_list': [FirebaseAuth.instance.currentUser.uid, userData.uid],
+          })
+          .then((value) {
+            FirebaseFirestore.instance
+                .collection('user')
+                .doc(userData.documentId)
+                .set({
               'group_list': FieldValue.arrayUnion([query.doc(value.id)]),
-            },
-            SetOptions(merge: true)
-        );
+            }, SetOptions(merge: true));
 
-
-        FirebaseFirestore.instance.collection('user')
-            .doc(data.userDocument)
-            .set(
-            {
+            FirebaseFirestore.instance
+                .collection('user')
+                .doc(data.userDocument)
+                .set({
               'group_list': FieldValue.arrayUnion([query.doc(value.id)]),
-            },
-            SetOptions(merge: true)
-        );
-      })
-          .then((value) =>
-          Fluttertoast.showToast(
+            }, SetOptions(merge: true));
+          })
+          .then((value) => Fluttertoast.showToast(
               msg: "追加しました",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
@@ -103,8 +105,8 @@ class GroupBloc {
               backgroundColor: Colors.blue,
               textColor: Colors.white,
               fontSize: 16.0))
-          .onError((error, stackTrace) =>
-          Fluttertoast.showToast(
+          .whenComplete(() => loading.setLoading(false))
+          .onError((error, stackTrace) => Fluttertoast.showToast(
               msg: "追加できませんでした",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
@@ -114,12 +116,13 @@ class GroupBloc {
               fontSize: 16.0))
           .whenComplete(() => loading.setLoading(false));
     }
-
+    loading.setLoading(false);
   }
 
   searchGroup() {
     LoginModel data = SharedDataController().getData();
-    DocumentReference query = FirebaseFirestore.instance.collection('user').doc(data.userDocument);
+    DocumentReference query =
+        FirebaseFirestore.instance.collection('user').doc(data.userDocument);
     query.get().then((value) {
       groupListController.sink.add(value.data()["group_list"]);
     });
