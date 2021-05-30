@@ -35,7 +35,9 @@ class _GroupState extends State<Group> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      groupBloc.searchGroup();
+    });
   }
 
   @override
@@ -113,6 +115,18 @@ class _GroupState extends State<Group> {
                   print(snapshot.data.email);
                 }, child: Text('追加'))],
               );
+              return Container();
+            },
+          ),
+          StreamBuilder<List<dynamic>>(
+            stream: groupBloc.groupListController.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return Text("error");
+              if (snapshot.hasData) {
+                return Column(
+                  children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
+                );
+              }
               return Container();
             },
           ),

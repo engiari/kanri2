@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 
 class GroupBloc {
   final StreamController<UserData> controller = StreamController<UserData>();
+  final StreamController<List<dynamic>> groupListController = StreamController<List<dynamic>>();
   final LoadingNotifier loading;
 
   GroupBloc(this.loading);
@@ -35,45 +36,92 @@ class GroupBloc {
       controller.sink.add(userData);
     }).whenComplete(() => loading.setLoading(false));
   }
-  sendGroup({UserData userData}) {
+  sendGroup({UserData userData}) async {
     // TODO submit
+    LoginModel data = SharedDataController().getData();
     final CollectionReference query =
     FirebaseFirestore.instance.collection('group');
 
     loading.setLoading(true);
-    query
-        .add({
-      'uid_list': [
-        FirebaseAuth.instance.currentUser.uid,userData.uid
-      ],
-    }).then((value) {
+    final myData = await FirebaseFirestore.instance.collection("user").doc(data.userDocument).get();
+    final targetData = await FirebaseFirestore.instance.collection("user").doc(userData.documentId).get();
 
-      FirebaseFirestore.instance.collection('user').doc(userData.documentId).set(
-          {
-            'group_list': FieldValue.arrayUnion([value.path]),
+    final List<dynamic> eachGroupList = [];
+    (myData.data()["group_list"] as List<dynamic>).forEach((e) {
+      eachGroupList.add((targetData.data()["group_list"] as List<dynamic>).firstWhere((element) => e == element));
+    });
 
-          },
-          SetOptions(merge: true)
-      );
-    })
-        .then((value) => Fluttertoast.showToast(
-        msg: "追加しました",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.blue,
-        textColor: Colors.white,
-        fontSize: 16.0))
-        .onError((error, stackTrace) => Fluttertoast.showToast(
-        msg: "追加できませんでした",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0))
-        .whenComplete(() => loading.setLoading(false));
+    bool duplicate = false;
+    await Future.forEach(eachGroupList, (element) async {
+      final groupData = await (element as DocumentReference).get();
+      if ((groupData.get("uid_list")).length <= 2) {
+        duplicate = true;
+      }
+    });
+
+    if (duplicate) {
+      Fluttertoast.showToast(
+          msg: "グループが既に存在します",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.blue,
+          textColor: Colors.white,
+          fontSize: 16.0).whenComplete(() => loading.setLoading(false));
+    } else {
+      query
+          .add({
+        'uid_list': [
+          FirebaseAuth.instance.currentUser.uid, userData.uid
+        ],
+      }).then((value) {
+        FirebaseFirestore.instance.collection('user')
+            .doc(userData.documentId)
+            .set(
+            {
+              'group_list': FieldValue.arrayUnion([query.doc(value.id)]),
+            },
+            SetOptions(merge: true)
+        );
+
+
+        FirebaseFirestore.instance.collection('user')
+            .doc(data.userDocument)
+            .set(
+            {
+              'group_list': FieldValue.arrayUnion([query.doc(value.id)]),
+            },
+            SetOptions(merge: true)
+        );
+      })
+          .then((value) =>
+          Fluttertoast.showToast(
+              msg: "追加しました",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.blue,
+              textColor: Colors.white,
+              fontSize: 16.0))
+          .onError((error, stackTrace) =>
+          Fluttertoast.showToast(
+              msg: "追加できませんでした",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0))
+          .whenComplete(() => loading.setLoading(false));
+    }
 
   }
 
+  searchGroup() {
+    LoginModel data = SharedDataController().getData();
+    DocumentReference query = FirebaseFirestore.instance.collection('user').doc(data.userDocument);
+    query.get().then((value) {
+      groupListController.sink.add(value.data()["group_list"]);
+    });
+  }
 }

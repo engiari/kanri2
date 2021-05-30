@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app7/screen/util/loading_notifier.dart';
 import 'package:flutter_app7/screen/util/login_model.dart';
@@ -37,10 +38,13 @@ class LoginBloc {
       });
       if (result == null || result.user == null) throw "ログインに失敗しました。";
 
-      // TODO 端末に保存
-      await SharedDataController().setData(LoginModel()
-        ..userId = result.user.uid
-        ..userName = result.user.email);
+      FirebaseFirestore.instance.collection("user").where("uid", isEqualTo: result.user.uid).get().then((value) {
+        // TODO 端末に保存
+        SharedDataController().setData(LoginModel()
+          ..userId = result.user.uid
+          ..userName = result.user.email
+          ..userDocument = value.docs.first.id);
+      });
 
       controller.sink.add(true);
       loading.setLoading(false);

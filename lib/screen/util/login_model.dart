@@ -7,6 +7,7 @@ class LoginModel extends ChangeNotifier {
   String password = '';
   String userId = '';
   String userName = '';
+  String userDocument = "";
 
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
