@@ -28,9 +28,12 @@ class Group extends StatefulWidget {
 class _GroupState extends State<Group> {
   TYPE pageType = TYPE.home;
   final textController = TextEditingController();
+  final groupController = TextEditingController();
+
   String searchEmail = '';
   GroupBloc groupBloc;
   String error = '';
+  String groupName = '';
 
   @override
   void initState() {
@@ -56,11 +59,11 @@ class _GroupState extends State<Group> {
         title: const Text('グループ'),
         leading: pageType != TYPE.home
             ? IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                ),
-                onPressed: null,
-              )
+          icon: Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: null,
+        )
             : null,
       ),
       body: Column(
@@ -107,14 +110,30 @@ class _GroupState extends State<Group> {
                     Text(snapshot.error,
                         style: TextStyle(color: Colors.red)
                     );
-              if (snapshot.hasData) return Column(
-                children: [Text(snapshot.data.email),
-                TextButton(onPressed: (){
-                  groupBloc.sendGroup(userData: snapshot.data);
-                  print("data");
-                  print(snapshot.data.email);
-                }, child: Text('追加'))],
-              );
+              if (snapshot.hasData)
+                return Column(
+                  children: [
+                    Text(snapshot.data.email),
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: 'グループ名',
+                      ),
+                      controller: groupController,
+                      onChanged: (text) {
+                        groupName = text;
+                      },
+                    ),
+                    TextButton(
+                      onPressed: (){
+                        snapshot.data.groupName = groupName;
+                        groupBloc.sendGroup(userData: snapshot.data);
+                        print("data");
+                        print(snapshot.data.email);
+                      },
+                      child: Text('追加'),
+                    ),
+                  ],
+                );
               return Container();
             },
           ),

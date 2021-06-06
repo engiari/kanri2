@@ -80,6 +80,7 @@ class GroupBloc {
       query
           .add({
             'uid_list': [FirebaseAuth.instance.currentUser.uid, userData.uid],
+            'group_name': userData.groupName,
           })
 
           .then((value) {
