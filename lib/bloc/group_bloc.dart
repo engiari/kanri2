@@ -54,14 +54,14 @@ class GroupBloc {
         .get();
 
     final List<dynamic> eachGroupList = [];
-    (myData.data()["group_list"] as List<dynamic>).forEach((e) {
-      eachGroupList.add((targetData.data()["group_list"] as List<dynamic>)
-          .firstWhere((element) => e == element));
+    (myData.data()["groupList"] as List<dynamic>).forEach((e) {
+      eachGroupList.add((targetData.data()["groupList"] as List<dynamic>)
+          .firstWhere((element) => e == element, orElse: () => null));
     });
     bool duplicate = false;
     await Future.forEach(eachGroupList, (element) async {
       final groupData = await (element as DocumentReference).get();
-      if ((groupData.get("uid_list")).length <= 2) {
+      if ((groupData.get("uidList")).length <= 2) {
         duplicate = true;
       }
     });
@@ -79,7 +79,7 @@ class GroupBloc {
     } else {
       query
           .add({
-            'uid_list': [FirebaseAuth.instance.currentUser.uid, userData.uid],
+            'uidList': [FirebaseAuth.instance.currentUser.uid, userData.uid],
             'group_name': userData.groupName,
           })
 
@@ -88,14 +88,14 @@ class GroupBloc {
                 .collection('user')
                 .doc(userData.documentId)
                 .set({
-              'group_list': FieldValue.arrayUnion([query.doc(value.id)]),
+              'groupList': FieldValue.arrayUnion([query.doc(value.id)]),
             }, SetOptions(merge: true));
 
             FirebaseFirestore.instance
                 .collection('user')
                 .doc(data.userDocument)
                 .set({
-              'group_list': FieldValue.arrayUnion([query.doc(value.id)]),
+              'groupList': FieldValue.arrayUnion([query.doc(value.id)]),
             }, SetOptions(merge: true));
           })
           .then((value) => Fluttertoast.showToast(
@@ -125,7 +125,7 @@ class GroupBloc {
     DocumentReference query =
         FirebaseFirestore.instance.collection('user').doc(data.userDocument);
     query.get().then((value) {
-      groupListController.sink.add(value.data()["group_list"]);
+      groupListController.sink.add(value.data()["groupList"]);
     });
   }
 }
