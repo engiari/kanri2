@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/bloc/feed_bloc.dart';
@@ -9,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
+enum TIME_ZONE { breakfast, noon, night }
+
 class Feed extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
@@ -17,6 +20,21 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   File _image;
   final picker = ImagePicker();
+  List<String> timeZoneListJp = [
+    "朝",
+    "昼",
+    "夜"
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // レイアウト
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      feedBloc = FeedBloc(Provider.of<LoadingNotifier>(context, listen: false));
+      //feedBloc
+    });
+  }
 
   Future getImageFromCamera() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -37,7 +55,7 @@ class _FeedState extends State<Feed> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   String meal = '';
-  String _timeframe = '';
+  String _timeFrame = '';
   String _meal = '';
   String _condition = '';
   String _fatigue = '';
@@ -50,7 +68,7 @@ class _FeedState extends State<Feed> {
 
   final now = DateTime.now();
 
-  var formatter = new DateFormat('yyyy/MM/dd');
+  var formatter = new DateFormat('yyyy-MM-dd');
 
   FeedBloc feedBloc;
 
@@ -72,8 +90,8 @@ class _FeedState extends State<Feed> {
                   Text("時間帯"),
                   FormBuilderRadioGroup(
                     wrapAlignment: WrapAlignment.center,
-                    onChanged: (text) {
-                      _timeframe = text;
+                    onChanged: (String text) {
+                      _timeFrame = EnumToString.convertToString(TIME_ZONE.values[timeZoneListJp.indexOf(text)]);
                     },
                     validator: (String text) {
                       if (text == null) {
@@ -82,11 +100,7 @@ class _FeedState extends State<Feed> {
 
                       return null;
                     },
-                    options: [
-                      "朝",
-                      "昼",
-                      "夜",
-                    ]
+                    options: timeZoneListJp
                         .map((option) => FormBuilderFieldOption(value: option))
                         .toList(growable: false),
                     name: "時間帯",
@@ -284,7 +298,6 @@ class _FeedState extends State<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    feedBloc = FeedBloc(Provider.of<LoadingNotifier>(context, listen: false));
     return FormBuilder(
       key: _formKey,
       child: Scaffold(
@@ -420,7 +433,7 @@ class _FeedState extends State<Feed> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   feedBloc.sendFeed(
-                      timeframe: _timeframe,
+                      timeframe: _timeFrame,
                       meal: _meal,
                       condition: _condition,
                       fatigue: _fatigue,

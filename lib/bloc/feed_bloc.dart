@@ -16,7 +16,7 @@ class FeedBloc {
   final CollectionReference query =
       FirebaseFirestore.instance.collection('feed');
 
-  final formatter = new DateFormat('yyyy/MM/dd');
+  final formatter = new DateFormat('yyyy-MM-dd');
 
   FeedBloc(this.loading);
 

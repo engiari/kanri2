@@ -40,6 +40,7 @@ dependencies:
   flutter_signin_button: ^2.0.0
   fluttertoast: ^8.0.4
   firebase_database: ^6.1.2
+  enum_to_string: ^2.0.1
   # カレンダー機能
   flutter_simple_customize_calendar: ^1.0.4
   # 画像選択機能

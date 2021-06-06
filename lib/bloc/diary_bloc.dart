@@ -16,7 +16,7 @@ class DiaryBloc {
   final CollectionReference query =
   FirebaseFirestore.instance.collection('feed');
 
-  final formatter = new DateFormat('yyyy/MM');
+  final formatter = new DateFormat('yyyy-MM');
 
   DiaryBloc(this.loading);
 

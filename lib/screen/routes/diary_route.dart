@@ -18,7 +18,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
 
   DateTime targetDay =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  var formatter = new DateFormat('yyyy/MM/dd');
+  var formatter = new DateFormat('yyyy-MM-dd');
 
   @override
   void initState() {
