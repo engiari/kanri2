@@ -20,6 +20,12 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('ログイン'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed("/");
+          },
+        ),
       ),
       body: Provider<LoginBloc>(
         create: (context) => bloc,

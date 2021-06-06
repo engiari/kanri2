@@ -15,7 +15,6 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-
   File _image;
   final picker = ImagePicker();
 
@@ -35,30 +34,15 @@ class _FeedState extends State<Feed> {
     });
   }
 
-
   final _formKey = GlobalKey<FormBuilderState>();
 
-
   String meal = '';
-
-  List<String> _timeframe = [
-  "",
-  ];
-  List<String> _meal = [
-    "",
-  ];
-  List<String> _condition = [
-    "",
-  ];
-  List<String> _fatigue = [
-    "",
-  ];
-  List<String> _appetite = [
-    "",
-  ];
-  List<String> _defecation = [
-    "",
-  ];
+  String _timeframe = '';
+  String _meal = '';
+  String _condition = '';
+  String _fatigue = '';
+  String _appetite = '';
+  String _defecation = '';
 
   List<bool> stateList = [true, false, false];
 
@@ -77,169 +61,222 @@ class _FeedState extends State<Feed> {
   }
 
   Widget radioMenu(int index) {
-    return Column(
-      children: [
-        Text("時間帯"),
-
-        FormBuilderRadioGroup(
-          wrapAlignment: WrapAlignment.center,
-          onChanged: (text) {
-            _timeframe[index] = text;
-          },
-          validator: (String text) {
-            if (text == null) {
-              return ('どれかを選択してください');
-            }
-
-            return null;
-          },
-
-          options: [
-            "朝",
-            "昼",
-            "夜",
-          ]
-              .map((option) => FormBuilderFieldOption(value: option))
-              .toList(growable: false),
-          name: "時間帯",
-        ),
-        ListTile(
-          title: TextFormField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: '食事メニュー',
-            ),
-            maxLines: null,
-            onChanged: (String text) {
-              _meal[index] = text;
-            },
-            validator: (String test) {
-              return null;
-            },
-          ),
-          //subtitle: Text("体調"),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return SizedBox(
+      child: Container(
+        child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  width: 300,
-                  child: _image == null
-                      ? Text('No image selected.')
-                      : Image.file(_image)),
+            Container(
+              color: Colors.grey.shade200,
+              child: Column(
+                children: [
+                  Text("時間帯"),
+                  FormBuilderRadioGroup(
+                    wrapAlignment: WrapAlignment.center,
+                    onChanged: (text) {
+                      _timeframe = text;
+                    },
+                    validator: (String text) {
+                      if (text == null) {
+                        return ('どれかを選択してください');
+                      }
+
+                      return null;
+                    },
+                    options: [
+                      "朝",
+                      "昼",
+                      "夜",
+                    ]
+                        .map((option) => FormBuilderFieldOption(value: option))
+                        .toList(growable: false),
+                    name: "時間帯",
+                  ),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FloatingActionButton(
-                  onPressed: getImageFromCamera, //カメラから画像を取得
-                  tooltip: 'Pick Image From Camera',
-                  child: Icon(Icons.add_a_photo),
+            ListTile(
+              title: TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: '食事メニュー',
                 ),
-                FloatingActionButton(
-                  onPressed: getImageFromGallery, //ギャラリーから画像を取得
-                  tooltip: 'Pick Image From Gallery',
-                  child: Icon(Icons.photo_library),
+                maxLines: null,
+                onChanged: (String text) {
+                  _meal = text;
+                },
+                validator: (String test) {
+                  return null;
+                },
+              ),
+              //subtitle: Text("体調"),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      width: 300,
+                      child: _image == null
+                          ? Text('No image selected.')
+                          : Image.file(_image)),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: getImageFromCamera, //カメラから画像を取得
+                      tooltip: 'Pick Image From Camera',
+                      child: Icon(Icons.add_a_photo),
+                    ),
+                    FloatingActionButton(
+                      onPressed: getImageFromGallery, //ギャラリーから画像を取得
+                      tooltip: 'Pick Image From Gallery',
+                      child: Icon(Icons.photo_library),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Container(
+              height: 20,
+            ),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("非常に良い", textAlign: TextAlign.center),
+                    Text("　　　　　　　　　　", textAlign: TextAlign.center),
+                    Text("非常に悪い", textAlign: TextAlign.center),
+                  ],
+                ),
+                Container(
+                  color: Colors.grey.shade200,
+                  child: Column(
+                    children: [
+                      Text("体調"),
+                      FormBuilderRadioGroup(
+                        wrapAlignment: WrapAlignment.center,
+                        onChanged: (text) {
+                          _condition = text;
+                        },
+                        validator: (String text) {
+                          if (text == null) {
+                            return ('どれかを選択してください');
+                          }
+                          return null;
+                        },
+                        options: [
+                          "5",
+                          "4",
+                          "3",
+                          "2",
+                          "1",
+                        ]
+                            .map((option) =>
+                                FormBuilderFieldOption(value: option))
+                            .toList(growable: false),
+                        name: "体調",
+                      ),
+                    ],
+                  ),
                 ),
               ],
+            ),
+            Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Text("疲労度"),
+                  FormBuilderRadioGroup(
+                    wrapAlignment: WrapAlignment.center,
+                    onChanged: (text) {
+                      _fatigue = text;
+                    },
+                    validator: (String text) {
+                      if (text == null) {
+                        return ('どれかを選択してください');
+                      }
+                      return null;
+                    },
+                    options: [
+                      "5",
+                      "4",
+                      "3",
+                      "2",
+                      "1",
+                    ]
+                        .map((option) => FormBuilderFieldOption(value: option))
+                        .toList(growable: false),
+                    name: "疲労度",
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.grey.shade200,
+              child: Column(
+                children: [
+                  Text("食欲"),
+                  FormBuilderRadioGroup(
+                    wrapAlignment: WrapAlignment.center,
+                    onChanged: (text) {
+                      _appetite = text;
+                    },
+                    validator: (String text) {
+                      if (text == null) {
+                        return ('どれかを選択してください');
+                      }
+                      return null;
+                    },
+                    options: [
+                      "5",
+                      "4",
+                      "3",
+                      "2",
+                      "1",
+                    ]
+                        .map((option) => FormBuilderFieldOption(value: option))
+                        .toList(growable: false),
+                    name: "食欲",
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Text("便"),
+                  FormBuilderRadioGroup(
+                    wrapAlignment: WrapAlignment.center,
+                    onChanged: (text) {
+                      _defecation = text;
+                    },
+                    validator: (String text) {
+                      if (text == null) {
+                        return ('どれかを選択してください');
+                      }
+                      return null;
+                    },
+                    options: [
+                      "5",
+                      "4",
+                      "3",
+                      "2",
+                      "1",
+                    ]
+                        .map((option) => FormBuilderFieldOption(value: option))
+                        .toList(growable: false),
+                    name: "便",
+                  ),
+                ],
+              ),
             )
           ],
         ),
-        Text("体調"),
-        FormBuilderRadioGroup(
-          wrapAlignment: WrapAlignment.center,
-          onChanged: (text) {
-            _condition[index] = text;
-          },
-          validator: (String text) {
-            if (text == null) {
-              return ('どれかを選択してください');
-            }
-            return null;
-          },
-          options: [
-            "5",
-            "4",
-            "3",
-            "2",
-            "1",
-          ]
-              .map((option) => FormBuilderFieldOption(value: option))
-              .toList(growable: false),
-          name: "体調",
-        ),
-        Text("疲労度"),
-        FormBuilderRadioGroup(
-          wrapAlignment: WrapAlignment.center,
-          onChanged: (text) {
-            _fatigue[index] = text;
-          },
-          validator: (String text) {
-            if (text == null) {
-              return ('どれかを選択してください');
-            }
-            return null;
-          },
-          options: [
-            "5",
-            "4",
-            "3",
-            "2",
-            "1",
-          ]
-              .map((option) => FormBuilderFieldOption(value: option))
-              .toList(growable: false),
-          name: "疲労度",
-        ),
-        Text("食欲"),
-        FormBuilderRadioGroup(
-          wrapAlignment: WrapAlignment.center,
-          onChanged: (text) {
-            _appetite[index] = text;
-          },
-          validator: (String text) {
-            if (text == null) {
-              return ('どれかを選択してください');
-            }
-            return null;
-          },
-          options: [
-            "5",
-            "4",
-            "3",
-            "2",
-            "1",
-          ]
-              .map((option) => FormBuilderFieldOption(value: option))
-              .toList(growable: false),
-          name: "食欲",
-        ),
-        Text("便"),
-        FormBuilderRadioGroup(
-          wrapAlignment: WrapAlignment.center,
-          onChanged: (text) {
-            _defecation[index] = text;
-          },
-          validator: (String text) {
-            if (text == null) {
-              return ('どれかを選択してください');
-            }
-            return null;
-          },
-          options: [
-            "5",
-            "4",
-            "3",
-            "2",
-            "1",
-          ]
-              .map((option) => FormBuilderFieldOption(value: option))
-              .toList(growable: false),
-          name: "便",
-        ),
-      ],
+      ),
     );
   }
 
@@ -347,7 +384,6 @@ class _FeedState extends State<Feed> {
                   //　367にあるImagePicker部分をここに表示させられる様にすると上手く行くと思います。
                   body: radioMenu(0),
                   isExpanded: stateList[0],
-
                 ),
                 /*
                 ExpansionPanel(
@@ -374,9 +410,7 @@ class _FeedState extends State<Feed> {
             ),
             FlatButton(
               color: Colors.blue,
-
-              child:
-              Text("記録する",
+              child: Text("記録する",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,

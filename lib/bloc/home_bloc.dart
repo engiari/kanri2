@@ -9,18 +9,17 @@ import 'package:flutter_app7/screen/util/shared_data_controller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-class DiaryBloc {
+class HomeBloc {
   final StreamController<bool> controller = StreamController<bool>();
   final LoadingNotifier loading;
 
   final CollectionReference query =
-  FirebaseFirestore.instance.collection('feed');
+  FirebaseFirestore.instance.collection('user');
 
-  final formatter = new DateFormat('yyyy/MM');
 
-  DiaryBloc(this.loading);
+  HomeBloc(this.loading);
 
-  referenceDiary({day, meal, condition, fatigue, appetite, defecation}) {
+  referenceHome({targetWeight}) {
     // TODO submit
     loading.setLoading(true);
     query
@@ -44,9 +43,6 @@ class DiaryBloc {
             fontSize: 16.0))
         .whenComplete(() => loading.setLoading(false));
   }
-  
-  getMonthData(){
-    DateTime now = DateTime.now();
-    query.orderBy("day").startAt([formatter.format(now)]).get().then((value) => print(value.docs.length));
-  }
+
+
 }

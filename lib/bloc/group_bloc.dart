@@ -58,7 +58,6 @@ class GroupBloc {
       eachGroupList.add((targetData.data()["group_list"] as List<dynamic>)
           .firstWhere((element) => e == element));
     });
-
     bool duplicate = false;
     await Future.forEach(eachGroupList, (element) async {
       final groupData = await (element as DocumentReference).get();
@@ -82,6 +81,7 @@ class GroupBloc {
           .add({
             'uid_list': [FirebaseAuth.instance.currentUser.uid, userData.uid],
           })
+
           .then((value) {
             FirebaseFirestore.instance
                 .collection('user')

@@ -23,7 +23,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
   @override
   void initState() {
     super.initState();
-    // レイアウトが
+    // レイアウト
     WidgetsBinding.instance.addPostFrameCallback((_) {
       diaryBloc =
           DiaryBloc(Provider.of<LoadingNotifier>(context, listen: false));
@@ -196,26 +196,61 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           if (snapshot.data.docs.isNotEmpty) {
             Map<String, dynamic> data = snapshot.data.docs.first.data();
             return Scaffold(
-              body: Text("Full Name: ${data["condition"][0]} ${data["condition"][1]}"),
+              body: Center(
+                child: Column(
+                  children: <Widget>[
+                Expanded(
+                  child: Container(
+                      //color: Colors.white,
+                      child: Column(
+                        children: [
+
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                              "時間帯: ${data["timeframe"]}\n 食事メニュー: ${data["meal"]}\n 体調: ${data["condition"]}\n 疲労度: ${data["fatigue"]}\n 食欲: ${data["appetite"]}\n 便: ${data["defecation"]}\n"
+                          ),
+                        ],
+                      ),
+                      ],
+                    ),
+                ),
+                ),
+
+                    RaisedButton(
+                      child: Text('戻る'),
+                      onPressed: () => Navigator.of(context).pop('戻る'),
+                    ),
+                  ],
+                ),
+              ),
               //body: Text("Full Name: ${data["userid"]} ${data["username"]} ${data["day"]}"),
             );
           } else {
             return Scaffold(
               body: Center(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("登録がありません",style: TextStyle(fontSize: 20.0),),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "登録がありません",
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                        ],
+                      ),
+                    ),
                     RaisedButton(
                       child: Text('戻る'),
-                      onPressed: () =>
-                          Navigator.of(context).pop('戻る'),
+                      onPressed: () => Navigator.of(context).pop('戻る'),
                     ),
                   ],
                 ),
               ),
             );
-
           }
         }
 
@@ -233,7 +268,8 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
         title: const Text('ダイアリー'),
       ),
       body: Center(
-        child: FlutterSimpleCustomizeCalendar(
+      child:
+        FlutterSimpleCustomizeCalendar(
           locale: 'ja',
           dayTextStyle: setDayTextStyle(),
           limitMinDate: DateTime(DateTime.now().year, DateTime.now().month - 1,
@@ -271,6 +307,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           targetDay: targetDay,
           firstWeekday: 0,
         ),
+
       ),
     );
   }

@@ -44,6 +44,10 @@ dependencies:
   flutter_simple_customize_calendar: ^1.0.4
   # 画像選択機能
   image_picker: ^0.7.5
+  # 日付選択
+  flutter_datetime_picker: ^1.5.1
+  # アイコン追加
+  font_awesome_flutter: ^9.0.0
 
 
 

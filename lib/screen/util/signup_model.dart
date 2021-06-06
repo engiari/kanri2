@@ -5,6 +5,18 @@ import 'package:flutter/material.dart';
 class SignUpModel extends ChangeNotifier {
   String mail = '';
   String password = '';
+  String userName = '';
+  String userBirth = '';
+  String userGender = '';
+  String userHeight = '';
+  String userWeight = '';
+  String userBodyBatPercentage = '';
+  String userRegular = '';
+  String targetWeight = '';
+
+
+
+
 
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
@@ -16,7 +28,9 @@ class SignUpModel extends ChangeNotifier {
     if (password.isEmpty) {
       throw ('パスワードを入力してください');
     }
-
+    if (userName.isEmpty) {
+      throw ('お名前を入力してください');
+    }
     // todo
     final user = (await _auth.createUserWithEmailAndPassword(
       email: mail,
@@ -27,8 +41,18 @@ class SignUpModel extends ChangeNotifier {
 
     FirebaseFirestore.instance.collection('user').doc(user.uid).set(
       {
+        'uid': user.uid,
         'email': email,
         'displayName': user.displayName,
+        'userName': userName,
+        'userBirth': userBirth,
+        'userGender': userGender,
+        'userHeight': userHeight,
+        'userWeight': userWeight,
+        'userBodyBatPercentage': userBodyBatPercentage,
+        'userRegular': userRegular,
+        'targetWeight': targetWeight,
+
       },
     );
   }
