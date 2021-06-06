@@ -199,25 +199,20 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
               body: Center(
                 child: Column(
                   children: <Widget>[
-                Expanded(
-                  child: Container(
-                      //color: Colors.white,
-                      child: Column(
-                        children: [
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                              "時間帯: ${data["timeframe"]}\n 食事メニュー: ${data["meal"]}\n 体調: ${data["condition"]}\n 疲労度: ${data["fatigue"]}\n 食欲: ${data["appetite"]}\n 便: ${data["defecation"]}\n"
-                          ),
-                        ],
+                    Expanded(
+                      child: Container(
+                        //color: Colors.white,
+                        child: Column(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: snapshot.data.docs.map((e) => Text(
+                                  "時間帯: ${e.data()["timeframe"]}\n 食事メニュー: ${e.data()["meal"]}\n 体調: ${e.data()["condition"]}\n 疲労度: ${e.data()["fatigue"]}\n 食欲: ${e.data()["appetite"]}\n 便: ${e.data()["defecation"]}\n"),).toList(),
+                            ),
+                          ],
+                        ),
                       ),
-                      ],
                     ),
-                ),
-                ),
-
                     RaisedButton(
                       child: Text('戻る'),
                       onPressed: () => Navigator.of(context).pop('戻る'),
@@ -268,8 +263,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
         title: const Text('ダイアリー'),
       ),
       body: Center(
-      child:
-        FlutterSimpleCustomizeCalendar(
+        child: FlutterSimpleCustomizeCalendar(
           locale: 'ja',
           dayTextStyle: setDayTextStyle(),
           limitMinDate: DateTime(DateTime.now().year, DateTime.now().month - 1,
@@ -307,7 +301,6 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           targetDay: targetDay,
           firstWeekday: 0,
         ),
-
       ),
     );
   }
