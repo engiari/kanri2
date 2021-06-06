@@ -56,7 +56,7 @@ class GroupBloc {
     final List<dynamic> eachGroupList = [];
     (myData.data()["groupList"] as List<dynamic>).forEach((e) {
       eachGroupList.add((targetData.data()["groupList"] as List<dynamic>)
-          .firstWhere((element) => e == element, orElse: () => null));
+          .firstWhere((element) => e == element));
     });
     bool duplicate = false;
     await Future.forEach(eachGroupList, (element) async {
