@@ -29,6 +29,7 @@ class LoginPage extends StatelessWidget {
       ),
       body: Provider<LoginBloc>(
         create: (context) => bloc,
+
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: StreamBuilder(

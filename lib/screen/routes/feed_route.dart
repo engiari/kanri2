@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/bloc/feed_bloc.dart';
 import 'package:flutter_app7/model/user_data.dart';
@@ -55,7 +56,6 @@ class _FeedState extends State<Feed> {
 
   final StreamController<UserData> controller = StreamController<UserData>();
 
-  String uid;
   String meal = '';
   String _timeFrame = '';
   String _meal = '';
@@ -89,6 +89,7 @@ class _FeedState extends State<Feed> {
               color: Colors.grey.shade200,
               child: Row(
                 children: [
+
                   Text("時間帯"),
                   Expanded(
                     child: FormBuilderRadioGroup(
@@ -452,7 +453,7 @@ class _FeedState extends State<Feed> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   feedBloc.sendFeed(
-                      uid: uid,
+                      uid: FirebaseAuth.instance.currentUser.uid,
                       timeframe: _timeFrame,
                       meal: _meal,
                       condition: _condition,

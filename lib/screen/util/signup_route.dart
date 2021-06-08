@@ -1,3 +1,4 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app7/screen/util/signup_model.dart';
@@ -6,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
+enum GENDER { man, woman }
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -23,6 +26,8 @@ class _SignUpPageState extends State<SignUpPage> {
     final userBodyBatPercentageController = TextEditingController();
     final userRegularController = TextEditingController();
     final targetWeightController = TextEditingController();
+
+    List<String> genderJp = ["男", "女"];
 
     String gender = '';
 
@@ -106,8 +111,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         Expanded(
                           child: FormBuilderRadioGroup(
                           wrapAlignment: WrapAlignment.spaceEvenly,
-                          onChanged: (text) {
-                            model.userGender = text;
+                          onChanged: (String text) {
+                            model.userGender = EnumToString.convertToString(
+                                GENDER.values[genderJp.indexOf(text)]);
                           },
                           validator: (String text) {
                             if (gender == null) {
@@ -115,10 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
                             return null;
                           },
-                          options: [
-                            "男",
-                            "女",
-                          ]
+                          options: genderJp
                               .map((option) => FormBuilderFieldOption(value: option))
                               .toList(growable: false),
                           name: "性別",

@@ -32,7 +32,9 @@ class GroupBloc {
           uid: value.docs.first.data()['uid'],
           displayName: value.docs.first.data()['displayName'],
           email: value.docs.first.data()['email'],
+          groupName: value.docs.first.data()['groupName'],
           documentId: value.docs.first.id);
+
       controller.sink.add(userData);
     }).whenComplete(() => loading.setLoading(false));
   }
@@ -128,4 +130,6 @@ class GroupBloc {
       groupListController.sink.add(value.data()["groupList"]);
     });
   }
+
+
 }

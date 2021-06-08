@@ -193,7 +193,9 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.data.docs.isNotEmpty) {
+
+
+            if (snapshot.data.docs.isNotEmpty) {
             Map<String, dynamic> data = snapshot.data.docs.first.data();
             return Scaffold(
               body: Center(
@@ -208,21 +210,24 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: snapshot.data.docs
-                                .map((e) => Text(
-                                      "時間帯: ${e.data()["timeframe"]}\n"
-                                      "食事メニュー: ${e.data()["meal"]}\n"
-                                      "体調: ${e.data()["condition"]}\n"
-                                      "疲労度: ${e.data()["fatigue"]}\n"
-                                      "食欲: ${e.data()["appetite"]}\n"
-                                      "便: ${e.data()["defecation"]}\n"),
-                                ).toList(),
+                                .map((e) =>
+                                Text(
+                                    "時間帯: ${e.data()["timeframe"]}\n"
+                                        "食事メニュー: ${e.data()["meal"]}\n"
+                                        "体調: ${e.data()["condition"]}\n"
+                                        "疲労度: ${e.data()["fatigue"]}\n"
+                                        "食欲: ${e.data()["appetite"]}\n"
+                                        "便: ${e.data()["defecation"]}\n"),
+                            ).toList(),
                           ),
                         ),
                       ],
                     ),
                     RaisedButton(
                       child: Text('編集'),
-                      onPressed: () => Navigator.of(context).pushReplacementNamed('/feed_route'),
+                      onPressed: () =>
+                          Navigator.of(context).pushReplacementNamed(
+                              '/feed_route'),
                     ),
                     RaisedButton(
                       child: Text('戻る'),
@@ -233,7 +238,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
               ),
               //body: Text("Full Name: ${data["userid"]} ${data["username"]} ${data["day"]}"),
             );
-          } else {
+        }else {
             return Scaffold(
               body: Center(
                 child: Column(

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:html';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,11 +31,12 @@ class _GroupState extends State<Group> {
   TYPE pageType = TYPE.home;
   final textController = TextEditingController();
   final groupController = TextEditingController();
+  final StreamController<UserData> controller = StreamController<UserData>();
 
   String searchEmail = '';
   GroupBloc groupBloc;
   String error = '';
-  String groupName = '';
+  String groupName;
 
   @override
   void initState() {
@@ -59,11 +62,11 @@ class _GroupState extends State<Group> {
         title: const Text('グループ'),
         leading: pageType != TYPE.home
             ? IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-          onPressed: null,
-        )
+                icon: Icon(
+                  Icons.arrow_back,
+                ),
+                onPressed: null,
+              )
             : null,
       ),
       body: Column(
@@ -71,14 +74,14 @@ class _GroupState extends State<Group> {
           // グループ名の表示
           TextField(
             decoration: InputDecoration(
-              hintText: 'メールアドレスを入力してください',
+              hintText: 'グループ登録したいメールアドレス',
             ),
             controller: textController,
             onChanged: (text) {
               searchEmail = text;
             },
           ),
-          Text(error),
+          Text(error, style: TextStyle(color: Colors.red)),
           FlatButton(
             color: Colors.blue,
             child: Text("検索する",
@@ -107,16 +110,16 @@ class _GroupState extends State<Group> {
               Widget errorWidget = Container();
               if (snapshot.hasError)
                 errorWidget =
-                    Text(snapshot.error,
-                        style: TextStyle(color: Colors.red)
-                    );
+                    Text(snapshot.error, style: TextStyle(color: Colors.red));
               if (snapshot.hasData)
                 return Column(
                   children: [
-                    Text(snapshot.data.email),
+                    Text("一致したメールアドレス"),
+                    Text(snapshot.data.email,
+                        style: TextStyle(color: Colors.red)),
                     TextField(
                       decoration: InputDecoration(
-                        hintText: 'グループ名',
+                        hintText: '分かりやすいグループ名を登録しましょう',
                       ),
                       controller: groupController,
                       onChanged: (text) {
@@ -124,7 +127,7 @@ class _GroupState extends State<Group> {
                       },
                     ),
                     TextButton(
-                      onPressed: (){
+                      onPressed: () {
                         snapshot.data.groupName = groupName;
                         groupBloc.sendGroup(userData: snapshot.data);
                         print("data");
@@ -134,9 +137,14 @@ class _GroupState extends State<Group> {
                     ),
                   ],
                 );
-              return Container();
+              return Column(
+                children: <Widget>[
+                  Text(""),
+                ],
+              );
             },
           ),
+
           StreamBuilder<List<dynamic>>(
             stream: groupBloc.groupListController.stream,
             builder: (context, snapshot) {
@@ -161,7 +169,6 @@ class _GroupState extends State<Group> {
         },
         child: const Icon(Icons.add),
       ),
-
        */
     );
 
