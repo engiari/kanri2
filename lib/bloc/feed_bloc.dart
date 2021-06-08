@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app7/model/user_data.dart';
 import 'package:flutter_app7/screen/util/loading_notifier.dart';
 import 'package:flutter_app7/screen/util/login_model.dart';
 import 'package:flutter_app7/screen/util/shared_data_controller.dart';
@@ -16,16 +17,19 @@ class FeedBloc {
   final CollectionReference query =
       FirebaseFirestore.instance.collection('feed');
 
+
+
   final formatter = new DateFormat('yyyy-MM-dd');
 
   FeedBloc(this.loading);
 
-  sendFeed({timeframe, meal, condition, fatigue, appetite, defecation}) {
+  sendFeed({uid, timeframe, meal, condition, fatigue, appetite, defecation}) {
     // TODO submit
 
     loading.setLoading(true);
     query
         .add({
+          'uid': uid,
           'day': formatter.format(DateTime.now().toLocal()),
           'timeframe': timeframe,
           'meal': meal,

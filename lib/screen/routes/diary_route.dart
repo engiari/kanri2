@@ -198,20 +198,31 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
             return Scaffold(
               body: Center(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        //color: Colors.white,
-                        child: Column(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: snapshot.data.docs.map((e) => Text(
-                                  "時間帯: ${e.data()["timeframe"]}\n 食事メニュー: ${e.data()["meal"]}\n 体調: ${e.data()["condition"]}\n 疲労度: ${e.data()["fatigue"]}\n 食欲: ${e.data()["appetite"]}\n 便: ${e.data()["defecation"]}\n"),).toList(),
-                            ),
-                          ],
+                    Text('この日の食事メニュー'),
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          color: Colors.white,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: snapshot.data.docs
+                                .map((e) => Text(
+                                      "時間帯: ${e.data()["timeframe"]}\n"
+                                      "食事メニュー: ${e.data()["meal"]}\n"
+                                      "体調: ${e.data()["condition"]}\n"
+                                      "疲労度: ${e.data()["fatigue"]}\n"
+                                      "食欲: ${e.data()["appetite"]}\n"
+                                      "便: ${e.data()["defecation"]}\n"),
+                                ).toList(),
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                    RaisedButton(
+                      child: Text('編集'),
+                      onPressed: () => Navigator.of(context).pushReplacementNamed('/feed_route'),
                     ),
                     RaisedButton(
                       child: Text('戻る'),
