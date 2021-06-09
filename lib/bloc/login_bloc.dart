@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_app7/screen/util/loading_notifier.dart';
@@ -43,7 +42,8 @@ class LoginBloc {
         SharedDataController().setData(LoginModel()
           ..userId = result.user.uid
           ..userName = result.user.email
-          ..userDocument = value.docs.first.id);
+          ..userDocument = value.docs.first.id
+        );
       });
 
       controller.sink.add(true);

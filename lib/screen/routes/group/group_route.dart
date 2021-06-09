@@ -31,8 +31,11 @@ class _GroupState extends State<Group> {
   final textController = TextEditingController();
   final groupController = TextEditingController();
   final StreamController<UserData> controller = StreamController<UserData>();
+  final StreamController<List<dynamic>> groupListController =
+  StreamController<List<dynamic>>();
 
   String searchEmail = '';
+  String searchGroup = '';
   GroupBloc groupBloc;
   String error = '';
   String groupName = '';
@@ -42,7 +45,7 @@ class _GroupState extends State<Group> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       groupBloc.searchGroup();
-      groupBloc.listGroup();
+      //groupBloc.listGroup;
     });
   }
 
@@ -149,13 +152,20 @@ class _GroupState extends State<Group> {
           StreamBuilder<List<dynamic>>(
             stream: groupBloc.groupListController.stream,
             builder: (context, snapshot) {
+              print(snapshot.data);
               if (snapshot.hasError) return Text("error");
               if (snapshot.hasData) {
+
                 return Column(
+                  //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
+                    //children: groupBloc.searchGroup(searchGroup),
                   children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
 
                 );
+
               }
+              print("snapshot.hasData");
+              print(snapshot.hasData);
               return Container();
             },
           ),

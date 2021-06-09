@@ -62,7 +62,9 @@ class SignUpModel extends ChangeNotifier {
           SharedDataController().setData(LoginModel()
             ..userId = user.uid
             ..userName = userName
-            ..userDocument = value.docs.first.id);
+            ..userDocument = value.docs.first.id
+            ..userBirth = userBirth
+          );
         }));
   }
 }

@@ -8,6 +8,8 @@ class LoginModel extends ChangeNotifier {
   String userId = '';
   String userName = '';
   String userDocument = "";
+  String userBirth = "";
+  String groupName;
 
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
@@ -31,6 +33,7 @@ class LoginModel extends ChangeNotifier {
     // TODO 端末に保存
     await SharedDataController().setData(LoginModel()
       ..userId = result.user.uid
-      ..userName = result.user.email);
+      ..userName = result.user.email
+    );
   }
 }

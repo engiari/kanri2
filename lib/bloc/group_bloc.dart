@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,7 +68,6 @@ class GroupBloc {
         duplicate = true;
       }
     });
-
     if (duplicate) {
       Fluttertoast.showToast(
               msg: "グループが既に存在します",
@@ -121,24 +121,49 @@ class GroupBloc {
     }
     loading.setLoading(false);
   }
-
+  /*
   searchGroup() {
     LoginModel data = SharedDataController().getData();
     DocumentReference query =
         FirebaseFirestore.instance.collection('user').doc(data.userDocument);
     query.get().then((value) {
-      groupListController.sink.add(value.data()["groupList"]);
+      groupListController.sink.add(value.data()["groupName"]);
+
+      print("data.userDocument");
+      print(data.userDocument);
+
     });
   }
 
-  listGroup() {
-    LoginModel data = SharedDataController().getData();
-    DocumentReference query =
-    FirebaseFirestore.instance.collection('group').doc(data.userDocument);
-    query.get().then((value) {
-      groupListController.sink.add(value.data()["group_name"]);
-    });
+   */
+
+  // 登録グループ検索
+  searchGroup(String searchGroup) {
+    // FirebaseFirestore の user コレクションを参照
+    CollectionReference query = FirebaseFirestore.instance.collection('user');
+    loading.setLoading(true);
+    // groupList を検索
+    query
+        .where("groupList",
+        // 一致するものを searchGroup へ
+        isEqualTo: searchGroup)
+        // 値の取得
+        .get()
+        // then の内容を返す
+        .then((value) {
+          // UserData の groupName を userGroupName へ
+    UserData userGroupName = UserData(
+          groupName: value.docs.first.data()['groupName']);
+
+    //groupListController.sink.add(value.data()["group_name"]);
+
+    // userGroupName の値を groupListController へ送る
+    groupListController.sink.add([userGroupName]);
+
+    }).whenComplete(() => loading.setLoading(false));
   }
+
+
 
 
 }
