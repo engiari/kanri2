@@ -35,15 +35,17 @@ class _GroupState extends State<Group> {
   String searchEmail = '';
   GroupBloc groupBloc;
   String error = '';
-  String groupName;
+  String groupName = '';
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       groupBloc.searchGroup();
+      groupBloc.listGroup();
     });
   }
+
 
   @override
   void dispose() {
@@ -151,6 +153,7 @@ class _GroupState extends State<Group> {
               if (snapshot.hasData) {
                 return Column(
                   children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
+
                 );
               }
               return Container();

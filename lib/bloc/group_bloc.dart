@@ -131,5 +131,14 @@ class GroupBloc {
     });
   }
 
+  listGroup() {
+    LoginModel data = SharedDataController().getData();
+    DocumentReference query =
+    FirebaseFirestore.instance.collection('group').doc(data.userDocument);
+    query.get().then((value) {
+      groupListController.sink.add(value.data()["group_name"]);
+    });
+  }
+
 
 }
