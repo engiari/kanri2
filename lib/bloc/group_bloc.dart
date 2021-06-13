@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 class GroupBloc {
   final StreamController<UserData> controller = StreamController<UserData>();
   final StreamController<List<dynamic>> groupListController =
-      StreamController<List<dynamic>>();
+  StreamController<List<dynamic>>();
   final LoadingNotifier loading;
 
   GroupBloc(this.loading);
@@ -25,8 +25,8 @@ class GroupBloc {
 
     query
         .where("email",
-            isEqualTo: searchEmail,
-            isNotEqualTo: FirebaseAuth.instance.currentUser.email)
+        isEqualTo: searchEmail,
+        isNotEqualTo: FirebaseAuth.instance.currentUser.email)
         .get()
         .then((value) {
       UserData userData = UserData(
@@ -44,7 +44,7 @@ class GroupBloc {
     // TODO submit
     LoginModel data = SharedDataController().getData();
     final CollectionReference query =
-        FirebaseFirestore.instance.collection('group');
+    FirebaseFirestore.instance.collection('group');
 
     loading.setLoading(true);
     final myData = await FirebaseFirestore.instance
@@ -70,62 +70,63 @@ class GroupBloc {
     });
     if (duplicate) {
       Fluttertoast.showToast(
-              msg: "グループが既に存在します",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.blue,
-              textColor: Colors.white,
-              fontSize: 16.0)
+          msg: "グループが既に存在します",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.blue,
+          textColor: Colors.white,
+          fontSize: 16.0)
           .whenComplete(() => loading.setLoading(false));
     } else {
       query
           .add({
-            'uidList': [FirebaseAuth.instance.currentUser.uid, userData.uid],
-            'group_name': userData.groupName,
-          })
+        'uidList': [FirebaseAuth.instance.currentUser.uid, userData.uid],
+        'group_name': userData.groupName,
+      })
 
           .then((value) {
-            FirebaseFirestore.instance
-                .collection('user')
-                .doc(userData.documentId)
-                .set({
-              'groupList': FieldValue.arrayUnion([query.doc(value.id)]),
-            }, SetOptions(merge: true));
+        FirebaseFirestore.instance
+            .collection('user')
+            .doc(userData.documentId)
+            .set({
+          'groupList': FieldValue.arrayUnion([query.doc(value.id)]),
+        }, SetOptions(merge: true));
 
-            FirebaseFirestore.instance
-                .collection('user')
-                .doc(data.userDocument)
-                .set({
-              'groupList': FieldValue.arrayUnion([query.doc(value.id)]),
-            }, SetOptions(merge: true));
-          })
+        FirebaseFirestore.instance
+            .collection('user')
+            .doc(data.userDocument)
+            .set({
+          'groupList': FieldValue.arrayUnion([query.doc(value.id)]),
+        }, SetOptions(merge: true));
+      })
           .then((value) => Fluttertoast.showToast(
-              msg: "追加しました",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.blue,
-              textColor: Colors.white,
-              fontSize: 16.0))
+          msg: "追加しました",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.blue,
+          textColor: Colors.white,
+          fontSize: 16.0))
           .whenComplete(() => loading.setLoading(false))
           .onError((error, stackTrace) => Fluttertoast.showToast(
-              msg: "追加できませんでした",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0))
+          msg: "追加できませんでした",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0))
           .whenComplete(() => loading.setLoading(false));
     }
     loading.setLoading(false);
   }
+
   /*
   searchGroup() {
     LoginModel data = SharedDataController().getData();
     DocumentReference query =
-        FirebaseFirestore.instance.collection('user').doc(data.userDocument);
+    FirebaseFirestore.instance.collection('user').doc(data.userDocument);
     query.get().then((value) {
       groupListController.sink.add(value.data()["groupName"]);
 
@@ -138,31 +139,42 @@ class GroupBloc {
    */
 
   // 登録グループ検索
-  searchGroup(String searchGroup) {
+  searchGroup() async {
+    LoginModel data = SharedDataController().getData();
     // FirebaseFirestore の user コレクションを参照
-    CollectionReference query = FirebaseFirestore.instance.collection('user');
+    DocumentReference query =
+    FirebaseFirestore.instance.collection('user').doc(data.userDocument);
+
+    print("data.userDocument");
+    print(data.userDocument);
+
     loading.setLoading(true);
-    // groupList を検索
-    query
-        .where("groupList",
-        // 一致するものを searchGroup へ
-        isEqualTo: searchGroup)
-        // 値の取得
-        .get()
-        // then の内容を返す
-        .then((value) {
-          // UserData の groupName を userGroupName へ
-    UserData userGroupName = UserData(
-          groupName: value.docs.first.data()['groupName']);
 
-    //groupListController.sink.add(value.data()["group_name"]);
+    // user から userDocument に登録された uid 取得
+    final myData = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(data.userDocument)
+        .get();
 
-    // userGroupName の値を groupListController へ送る
-    groupListController.sink.add([userGroupName]);
+    // 一致した uid の groupList を検索
+    final List<dynamic> eachGroupList = [];
+    (myData.data()["groupList"] as List<dynamic>).forEach((e) {
+      eachGroupList.add((myData.data()["groupList"] as List<dynamic>)
+          .firstWhere((element) => e == element));
+    });
 
-    }).whenComplete(() => loading.setLoading(false));
+    // groupList の値を groupListController へ送る
+    query.get().then((value) {
+      groupListController.sink.add(value.data()["groupList"]);
+    });
+
+    print(["myData", myData]);
+    print(["groupList", myData.data()["groupList"]]);
+
+    loading.setLoading(false);
+
+
   }
-
 
 
 
