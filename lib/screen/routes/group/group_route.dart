@@ -149,7 +149,7 @@ class _GroupState extends State<Group> {
             },
           ),
 
-          StreamBuilder<List<dynamic>>(
+          StreamBuilder<List<String>>(
             stream: groupBloc.groupListController.stream,
             builder: (context, snapshot) {
               print(snapshot.data);
@@ -160,7 +160,7 @@ class _GroupState extends State<Group> {
                   //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
                     //children: groupBloc.searchGroup(searchGroup),
 
-                    children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
+                    children: snapshot.data.map((String e) => Text(e.toString())).toList(),
                 );
 
               }

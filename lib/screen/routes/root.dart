@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/routes/info_route.dart';
 import 'package:flutter_app7/screen/routes/setting_route.dart';
+import 'package:flutter_app7/screen/routes/token_monitor.dart';
 
 import 'diary_route.dart';
 import 'feed_route.dart';
 import 'group/group_route.dart';
 import 'home_route.dart';
 import 'setting_route.dart';
-
 
 // 各ページ
 
@@ -41,13 +41,14 @@ class _RootWidgetState extends State<RootWidget> {
     'お知らせ',
     '設定',
   ];
+  String _token;
 
   var _routes = [
     Home(),
     Feed(),
     CustomContainerExample(), //Diary(),
     Group(),
-    Info(),
+    Info(), //Info(),
     Setting(),
   ];
 
@@ -68,7 +69,8 @@ class _RootWidgetState extends State<RootWidget> {
         _footerIcons[index],
         color: Colors.black87,
       ),
-      label: _footerItemNames[index],);
+      label: _footerItemNames[index],
+    );
   }
 
   BottomNavigationBarItem _UpdateDeactiveState(int index) {
@@ -77,7 +79,8 @@ class _RootWidgetState extends State<RootWidget> {
         _footerIcons[index],
         color: Colors.black26,
       ),
-      label: _footerItemNames[index] ?? "",);
+      label: _footerItemNames[index] ?? "",
+    );
   }
 
   void _onItemTapped(int index) {

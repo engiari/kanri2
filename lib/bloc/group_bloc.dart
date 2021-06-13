@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 
 class GroupBloc {
   final StreamController<UserData> controller = StreamController<UserData>();
-  final StreamController<List<dynamic>> groupListController =
-  StreamController<List<dynamic>>();
+  final StreamController<List<String>> groupListController =
+  StreamController<List<String>>();
   final LoadingNotifier loading;
 
   GroupBloc(this.loading);
@@ -141,6 +141,8 @@ class GroupBloc {
   // 登録グループ検索
   searchGroup() async {
     LoginModel data = SharedDataController().getData();
+    List<String> groupName = [];
+
     // FirebaseFirestore の user コレクションを参照
     DocumentReference query =
     FirebaseFirestore.instance.collection('user').doc(data.userDocument);
@@ -151,22 +153,15 @@ class GroupBloc {
     loading.setLoading(true);
 
     // user から userDocument に登録された uid 取得
-    final myData = await FirebaseFirestore.instance
-        .collection("user")
-        .doc(data.userDocument)
+    final myData = await query
         .get();
 
-    // 一致した uid の groupList を検索
-    final List<dynamic> eachGroupList = [];
-    (myData.data()["groupList"] as List<dynamic>).forEach((e) {
-      eachGroupList.add((myData.data()["groupList"] as List<dynamic>)
-          .firstWhere((element) => e == element));
+    await Future.forEach((myData.data()["groupList"] as List<dynamic>), (element) async {
+      final groupData = await element.get();
+      groupName.add(groupData.data()["group_name"]);
     });
 
-    // groupList の値を groupListController へ送る
-    query.get().then((value) {
-      groupListController.sink.add(value.data()["groupList"]);
-    });
+    groupListController.sink.add(groupName);
 
     print(["myData", myData]);
     print(["groupList", myData.data()["groupList"]]);
