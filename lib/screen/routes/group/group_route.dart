@@ -159,13 +159,14 @@ class _GroupState extends State<Group> {
                 return Column(
                   //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
                     //children: groupBloc.searchGroup(searchGroup),
-                  children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
 
+                    children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
                 );
 
               }
-              print("snapshot.hasData");
+              print("グループリスト");
               print(snapshot.hasData);
+              print(snapshot.data);
               return Container();
             },
           ),
