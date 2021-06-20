@@ -8,11 +8,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/bloc/group_bloc.dart';
+import 'package:flutter_app7/model/group_data.dart';
 import 'package:flutter_app7/model/user_data.dart';
 import 'package:flutter_app7/screen/util/group_model.dart';
 import 'package:flutter_app7/screen/util/loading_notifier.dart';
 import 'package:provider/provider.dart';
 
+import '../chat_route.dart';
 import 'add_group.dart';
 
 enum TYPE { home, search }
@@ -39,6 +41,7 @@ class _GroupState extends State<Group> {
   GroupBloc groupBloc;
   String error = '';
   String groupName = '';
+  String showGroupChat;
 
   @override
   void initState() {
@@ -73,7 +76,7 @@ class _GroupState extends State<Group> {
               )
             : null,
       ),
-      body: Column(
+      body: showGroupChat != null ? Chat(showGroupChat): Column(
         children: <Widget>[
           // グループ名の表示
           TextField(
@@ -149,7 +152,7 @@ class _GroupState extends State<Group> {
             },
           ),
 
-          StreamBuilder<List<String>>(
+          StreamBuilder<List<GroupData>>(
             stream: groupBloc.groupListController.stream,
             builder: (context, snapshot) {
               print(snapshot.data);
@@ -160,7 +163,11 @@ class _GroupState extends State<Group> {
                   //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
                     //children: groupBloc.searchGroup(searchGroup),
 
-                    children: snapshot.data.map((String e) => Text(e.toString())).toList(),
+                    children: snapshot.data.map((GroupData e) => TextButton(onPressed: (){
+                      setState(() {
+                        showGroupChat = e.documentPath;
+                      });
+                    }, child: Text(e.groupName))).toList(),
                 );
 
               }

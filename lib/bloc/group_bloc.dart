@@ -3,7 +3,9 @@ import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app7/model/group_data.dart';
 import 'package:flutter_app7/model/user_data.dart';
 import 'package:flutter_app7/screen/util/loading_notifier.dart';
 import 'package:flutter_app7/screen/util/login_model.dart';
@@ -13,8 +15,8 @@ import 'package:intl/intl.dart';
 
 class GroupBloc {
   final StreamController<UserData> controller = StreamController<UserData>();
-  final StreamController<List<String>> groupListController =
-  StreamController<List<String>>();
+  final StreamController<List<GroupData>> groupListController =
+  StreamController<List<GroupData>>();
   final LoadingNotifier loading;
 
   GroupBloc(this.loading);
@@ -59,13 +61,15 @@ class GroupBloc {
     final List<dynamic> eachGroupList = [];
     (myData.data()["groupList"] as List<dynamic>).forEach((e) {
       eachGroupList.add((targetData.data()["groupList"] as List<dynamic>)
-          .firstWhere((element) => e == element));
+          .firstWhere((element) => e == element, orElse: () => null));
     });
     bool duplicate = false;
     await Future.forEach(eachGroupList, (element) async {
-      final groupData = await (element as DocumentReference).get();
-      if ((groupData.get("uidList")).length <= 2) {
-        duplicate = true;
+      if (element != null){
+        final groupData = await (element as DocumentReference).get();
+        if ((groupData.get("uidList")).length <= 2) {
+          duplicate = true;
+        }
       }
     });
     if (duplicate) {
@@ -99,6 +103,12 @@ class GroupBloc {
             .set({
           'groupList': FieldValue.arrayUnion([query.doc(value.id)]),
         }, SetOptions(merge: true));
+       /* DatabaseReference  _messagesRef = FirebaseDatabase.instance.reference().child(value.path);
+        _messagesRef.push().set(<String, dynamic>{
+          'messages': ['ttestdddd']
+        });
+
+        */
       })
           .then((value) => Fluttertoast.showToast(
           msg: "追加しました",
@@ -141,7 +151,7 @@ class GroupBloc {
   // 登録グループ検索
   searchGroup() async {
     LoginModel data = SharedDataController().getData();
-    List<String> groupName = [];
+    List<GroupData> groupData = [];
 
     // FirebaseFirestore の user コレクションを参照
     DocumentReference query =
@@ -157,11 +167,11 @@ class GroupBloc {
         .get();
 
     await Future.forEach((myData.data()["groupList"] as List<dynamic>), (element) async {
-      final groupData = await element.get();
-      groupName.add(groupData.data()["group_name"]);
+      final data = await element.get();
+      groupData.add(GroupData(documentPath: data.id, groupName: data.data()["group_name"]));
     });
 
-    groupListController.sink.add(groupName);
+    groupListController.sink.add(groupData);
 
     print(["myData", myData]);
     print(["groupList", myData.data()["groupList"]]);
