@@ -18,15 +18,14 @@ class Chat extends StatefulWidget {
   Chat(this.chatGroupPath);
 
   @override
-  //※_ChatStateに引数がないとエラーになる
-  _ChatState createState() => _ChatState("");
+  _ChatState createState() => _ChatState();
 }
 
 class _ChatState extends State<Chat> {
-  final String userName;
+  final String userName = FirebaseAuth.instance.currentUser.uid;
 
   //※_ChatStateに引数がないとエラーになる
-  final ChatBloc bloc = ChatBloc("");
+  ChatBloc bloc;
 
   // chatデータを扱う配列
   List<ChatDataModel> message = [];
@@ -37,19 +36,14 @@ class _ChatState extends State<Chat> {
   // テキストエリアのコントロール
   final _controller = TextEditingController();
 
-  _ChatState(this.userName);
 
   //  initState() という関数内でBlocのデータを受け取る
   void initState() {
     super.initState();
+    bloc = ChatBloc(widget.chatGroupPath);
     // .listen((_){}); を使うと処理部分でBlocのデータを受け取れる
     // ※受信したデータも送信時と同じ流れでチャット欄に表示
-    bloc.sendResultStream.stream.listen((ChatDataModel event) {
-      setState(() {
-        // Blocから event を受け取って表示用の配列（List<ChatDataModel> message = [];）に追加
-        message.add(event);
-      });
-    });
+
   }
 
   // 送信するデータ
@@ -82,34 +76,41 @@ class _ChatState extends State<Chat> {
             children: <Widget>[
               Container(
                   child: Expanded(
-                    child: ListView(
-                    padding: const EdgeInsets.all(16.0),
-                    // message変数の中のデータをリスト表示（ListView Widget）
-                    children: message
-                      .map(
-                        (e) => Container(
-                          // 内側余白
-                          padding: EdgeInsets.all(1),
-                          // 外側余白
-                          margin: EdgeInsets.all(2),
-                          // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
-                          color: e.userName == userName
-                              ? Colors.grey // 一致
-                              : Colors.green.shade300, // それ以外
-                          child: ListTile(
-                            title: Text(
-                              e.message,
-                              style: TextStyle(
-                                color: e.userName == userName
-                                    ? Colors.white // 一致
-                                    : Colors.black, // それ以外
+                    child: StreamBuilder<ChatDataModel>(
+                      stream: bloc.sendResultStream.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                        message.add(snapshot.data);
+                        return ListView(
+                        padding: const EdgeInsets.all(16.0),
+                        // message変数の中のデータをリスト表示（ListView Widget）
+                        children: message
+                          .map(
+                            (e) => Container(
+                              // 内側余白
+                              padding: EdgeInsets.all(1),
+                              // 外側余白
+                              margin: EdgeInsets.all(2),
+                              // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
+                              color: e.userName == userName
+                                  ? Colors.grey // 一致
+                                  : Colors.green.shade300, // それ以外
+                              child: ListTile(
+                                title: Text(
+                                  e.message,
+                                  style: TextStyle(
+                                    color: e.userName == userName
+                                        ? Colors.white // 一致
+                                        : Colors.black, // それ以外
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  ),
+                          )
+                          .toList(),
+                  );
+                      }
+                    ),
                 ),
               ),
               Row(
