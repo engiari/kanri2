@@ -4,7 +4,6 @@ FLUTTER_APPLICATION_PATH=/Users/nobu/StudioProjects/kanri2
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=/Users/nobu/StudioProjects/kanri2/lib/main.dart
 FLUTTER_BUILD_DIR=build
-SYMROOT=${SOURCE_ROOT}/../build/ios
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1
 EXCLUDED_ARCHS[sdk=iphonesimulator*]=arm64 i386

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/bloc/diary_bloc.dart';
-import 'package:flutter_app7/screen/util/loading_notifier.dart';
+import 'package:flutter_app7/bloc/diaryBloc.dart';
+import 'package:flutter_app7/screen/util/loadingNotifier.dart';
 import 'package:flutter_simple_customize_calendar/flutter_simple_customize_calendar.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';

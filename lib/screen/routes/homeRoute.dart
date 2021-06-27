@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/screen/util/login_model.dart';
-import 'package:flutter_app7/screen/util/shared_data_controller.dart';
+import 'package:flutter_app7/screen/util/loginModel.dart';
+import 'package:flutter_app7/screen/util/sharedDataController.dart';
 
 class Home extends StatelessWidget {
   LoginModel get sharedData => SharedDataController().getData();

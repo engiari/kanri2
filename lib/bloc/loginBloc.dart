@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app7/screen/util/loading_notifier.dart';
-import 'package:flutter_app7/screen/util/login_model.dart';
-import 'package:flutter_app7/screen/util/shared_data_controller.dart';
+import 'package:flutter_app7/screen/util/loadingNotifier.dart';
+import 'package:flutter_app7/screen/util/loginModel.dart';
+import 'package:flutter_app7/screen/util/sharedDataController.dart';
 
 class LoginBloc {
   final StreamController<bool> controller = StreamController<bool>();

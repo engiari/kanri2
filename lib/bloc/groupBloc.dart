@@ -5,11 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/model/group_data.dart';
-import 'package:flutter_app7/model/user_data.dart';
-import 'package:flutter_app7/screen/util/loading_notifier.dart';
-import 'package:flutter_app7/screen/util/login_model.dart';
-import 'package:flutter_app7/screen/util/shared_data_controller.dart';
+import 'package:flutter_app7/model/groupData.dart';
+import 'package:flutter_app7/model/userData.dart';
+import 'package:flutter_app7/screen/util/loadingNotifier.dart';
+import 'package:flutter_app7/screen/util/loginModel.dart';
+import 'package:flutter_app7/screen/util/sharedDataController.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 

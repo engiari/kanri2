@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/bloc/login_bloc.dart';
-import 'package:flutter_app7/screen/util/loading_notifier.dart';
-import 'package:flutter_app7/screen/util/login_model.dart';
+import 'package:flutter_app7/bloc/loginBloc.dart';
+import 'package:flutter_app7/screen/util/loadingNotifier.dart';
+import 'package:flutter_app7/screen/util/loginModel.dart';
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 

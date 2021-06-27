@@ -1,4 +1,4 @@
-import 'package:flutter_app7/screen/util/login_model.dart';
+import 'package:flutter_app7/screen/util/loginModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String USER_ID_STR =  "user_id";

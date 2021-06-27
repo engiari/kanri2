@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/screen/util/shared_data_controller.dart';
+import 'package:flutter_app7/screen/util/sharedDataController.dart';
 
 class LoginModel extends ChangeNotifier {
   String mail = '';

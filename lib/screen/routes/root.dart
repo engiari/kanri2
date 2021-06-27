@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/screen/routes/info_route.dart';
-import 'package:flutter_app7/screen/routes/setting_route.dart';
-import 'package:flutter_app7/screen/routes/token_monitor.dart';
-
-import 'diary_route.dart';
-import 'feed_route.dart';
-import 'group/group_route.dart';
-import 'home_route.dart';
-import 'setting_route.dart';
+import 'package:flutter_app7/screen/routes/infoRoute.dart';
+import 'package:flutter_app7/screen/routes/settingRoute.dart';
+import 'package:flutter_app7/screen/routes/tokenMonitor.dart';
+import 'diaryRoute.dart';
+import 'feedRoute.dart';
+import 'group/groupRoute.dart';
+import 'homeRoute.dart';
+import 'settingRoute.dart';
 
 // 各ページ
 

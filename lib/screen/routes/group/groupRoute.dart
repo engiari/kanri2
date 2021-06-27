@@ -7,15 +7,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/bloc/group_bloc.dart';
-import 'package:flutter_app7/model/group_data.dart';
-import 'package:flutter_app7/model/user_data.dart';
-import 'package:flutter_app7/screen/util/group_model.dart';
-import 'package:flutter_app7/screen/util/loading_notifier.dart';
+import 'package:flutter_app7/bloc/groupBloc.dart';
+import 'package:flutter_app7/model/groupData.dart';
+import 'package:flutter_app7/model/userData.dart';
+import 'package:flutter_app7/screen/util/groupModel.dart';
+import 'package:flutter_app7/screen/util/loadingNotifier.dart';
 import 'package:provider/provider.dart';
 
-import '../chat_route.dart';
-import 'add_group.dart';
+import '../chatRoute.dart';
+import 'addGroup.dart';
 
 enum TYPE { home, search }
 
@@ -146,7 +146,15 @@ class _GroupState extends State<Group> {
                 );
               return Column(
                 children: <Widget>[
-                  Text(""),
+                  Container(
+                    color: Colors.grey,
+                    // 内側余白
+                    padding: EdgeInsets.all(1),
+                    // 外側余白
+                    margin: EdgeInsets.all(20),
+                  ),
+                  Text("グループリスト",
+                      style: TextStyle(color: Colors.black,fontSize: 15.0,)),
                 ],
               );
             },
@@ -160,6 +168,7 @@ class _GroupState extends State<Group> {
               if (snapshot.hasData) {
 
                 return Column(
+
                   //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
                     //children: groupBloc.searchGroup(searchGroup),
 
@@ -167,7 +176,10 @@ class _GroupState extends State<Group> {
                       setState(() {
                         showGroupChat = e.documentPath;
                       });
-                    }, child: Text(e.groupName))).toList(),
+                    }, child: Text(e.groupName,
+                        style: TextStyle(color: Colors.blue,fontSize: 30.0,)))).toList(),
+
+
                 );
 
               }

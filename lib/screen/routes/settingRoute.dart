@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app7/screen/util/login_model.dart';
+import 'package:flutter_app7/screen/util/loginModel.dart';
 import 'package:flutter_app7/screen/util/login_route.dart';
-import 'package:flutter_app7/screen/util/shared_data_controller.dart';
-
-import 'group/group_route.dart';
+import 'package:flutter_app7/screen/util/sharedDataController.dart';
+import 'group/groupRoute.dart';
 
 class Setting extends StatelessWidget {
   LoginModel get sharedData => SharedDataController().getData();
