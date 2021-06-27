@@ -4,15 +4,19 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_app7/model/chatDataModel.dart';
 
 class ChatBloc {
-  // FirebaseDatabaseの指定
+  // DatabaseReference という型を定義
   DatabaseReference _notesReference;
 
-  final StreamController<ChatDataModel> _sendStream = StreamController<ChatDataModel>();
-  final StreamController<ChatDataModel> sendResultStream = StreamController<ChatDataModel>();
+  final StreamController<List<ChatDataModel>> _sendStream = StreamController<List<ChatDataModel>>();
+  final StreamController<List<ChatDataModel>> sendResultStream = StreamController<List<ChatDataModel>>();
+
+  // List<ChatDataModel>型の chatModelList に空の配列を定義
+  List<ChatDataModel> chatModelList = [];
 
   // クラス名（ChatBloc）と関数名（ChatBloc）が同じ場合はクラスが作成された時に最初に実行される
-  // ChatBloc() の引数に userName を引っ張ってくる
+  // ChatBloc() の引数に groupID を引っ張ってくる
   ChatBloc(String groupID) {
+    // FirebaseDatabaseの指定 groupID を取得
     _notesReference = FirebaseDatabase.instance.reference().child(groupID);
 
     // RealTimeDatabaseにデータ追加があった時に通知が .onChildAdded に飛び、.listen で受け取る
@@ -20,11 +24,11 @@ class ChatBloc {
     _notesReference.onChildAdded.listen((Event event) {
       // event.snapshot.value という変数の中の ["userName"] に入っている値を取って自分の userName と比較
       // RealTimeDatabaseからの通知は誰がデータを入れたかは関係なくデータが飛んでくるため
-      // 一致した場合、送信者は自分なので何もしない
-        // 不一致の場合、Blocにデータを渡す
+        // サーバに登録された自分のデータを表示させる処理
         // chatBlocは chatDataModel という型でやり取りを行うのでEvent型をchatDataModelFromSnapShot関数でchatDataModel型に変換（chatDataModelFromSnapShot(event.snapshot)）
         // 変換処理はchatDataModel.dartのchatDataModelクラス内に変換用の関数がある
-        sendResultStream.sink.add(chatDataModelFromSnapShot(event.snapshot));
+      chatModelList.add(chatDataModelFromSnapShot(event.snapshot));
+        sendResultStream.sink.add(chatModelList);
     });
   }
 
@@ -34,19 +38,17 @@ class ChatBloc {
     // push()で送信、set(<値>)で送信するデータを入れられる
     // .then((_){}); でデータ送信が成功した後に実行する処理
     _notesReference.push().set(data.toJson()).then((_) {
-      // データ送信が成功したらchatBlocにデータを渡す
     });
   }
 
+  // 以前のメッセージを取得（.once で１回だけ取得、as で送られてくる values.value の型が分からないデータを Map<dynamic, dynamic> として扱う）
   getMessege(){
     _notesReference.once().then((values) => (values.value as Map<dynamic, dynamic>).forEach((key, value) {
-      sendResultStream.sink.add(chatDataModelFromMap(value));
-
+      //sendResultStream.sink.add(chatDataModelFromMap(value));
       print(value);
     }));
 
   }
-
 
   dispose() {
     _sendStream.close();

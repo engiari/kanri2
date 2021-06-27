@@ -22,9 +22,10 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  // FirebaseAuthenticationからuidを取得して userName に入れる
   final String userName = FirebaseAuth.instance.currentUser.uid;
 
-  //※_ChatStateに引数がないとエラーになる
+  // ChatBloc という場所を用意して initState の中身を入れる
   ChatBloc bloc;
 
   // chatデータを扱う配列
@@ -36,15 +37,15 @@ class _ChatState extends State<Chat> {
   // テキストエリアのコントロール
   final _controller = TextEditingController();
 
-
   //  initState() という関数内でBlocのデータを受け取る
   void initState() {
     super.initState();
     bloc = ChatBloc(widget.chatGroupPath);
     // .listen((_){}); を使うと処理部分でBlocのデータを受け取れる
     // ※受信したデータも送信時と同じ流れでチャット欄に表示
+    // WidgetsBinding.instance.addPostFrameCallback((_){}); でレイアウトが表示された後に実行する
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bloc.getMessege();
+      //bloc.getMessege();
     });
   }
 
@@ -77,53 +78,64 @@ class _ChatState extends State<Chat> {
           child: Column(
             children: <Widget>[
               Container(
-                  child: Expanded(
-                    child: StreamBuilder<ChatDataModel>(
+                child: Expanded(
+                  // StreamBuilder：Blocから受け取ったデータをレイアウトで表示させる時の要素
+                  // StreamBuilder<Blocから送られてくるデータの形（この場合：List<ChatDataModel>）>
+                  child: StreamBuilder<List<ChatDataModel>>(
                       stream: bloc.sendResultStream.stream,
                       builder: (context, snapshot) {
+                        // snapshot にデータがあった場合 ListView の中身を返す
                         if (snapshot.hasData)
-                          print(snapshot.data.message);
-                        if (snapshot.hasData)
-                        message.add(snapshot.data);
-                        return ListView(
-                        padding: const EdgeInsets.all(16.0),
-                        // message変数の中のデータをリスト表示（ListView Widget）
-                        children: message
-                          .map(
-                            (e) => Row(
-                              children: [
-                                e.userName == userName ? Expanded(flex: 1, child: Container()): Container(),
-                                Expanded(
-                                  flex: 9,
-                                  child: Container(
-                                    // 内側余白
-                                    padding: EdgeInsets.all(1),
-                                    // 外側余白
-                                    margin: EdgeInsets.all(2),
-                                    // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
-                                    color: e.userName == userName
-                                        ? Colors.grey // 一致
-                                        : Colors.green.shade300, // それ以外
-                                    child: ListTile(
-                                      title: Text(
-                                        e.message,
-                                        style: TextStyle(
+                          return ListView(
+                            padding: const EdgeInsets.all(16.0),
+                            // message変数の中のデータをリスト表示（ListView Widget）
+                            children: snapshot.data
+                                .map(
+                                  (e) => Row(
+                                    children: [
+                                      // Expanded の flex: で比率を設定して配置するのがベスト
+                                      // e.userName と userName が一致する場合の表示（自分）
+                                      e.userName == userName
+                                          ? Expanded(
+                                              flex: 1, child: Container())
+                                          : Container(),
+                                      Expanded(
+                                        flex: 9,
+                                        child: Container(
+                                          // 内側余白
+                                          padding: EdgeInsets.all(1),
+                                          // 外側余白
+                                          margin: EdgeInsets.all(2),
+                                          // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
                                           color: e.userName == userName
-                                              ? Colors.white // 一致
-                                              : Colors.black, // それ以外
+                                              ? Colors.grey // 一致
+                                              : Colors.green.shade300,
+                                          // それ以外
+                                          child: ListTile(
+                                            title: Text(
+                                              e.message,
+                                              style: TextStyle(
+                                                color: e.userName == userName
+                                                    ? Colors.white // 一致
+                                                    : Colors.black, // それ以外
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+
+                                      // e.userName と userName が不一致の場合の表示（自分以外）
+                                      e.userName != userName
+                                          ? Expanded(
+                                              flex: 1, child: Container())
+                                          : Container(),
+                                    ],
                                   ),
-                                ),
-                                e.userName != userName ? Expanded(flex: 1, child: Container()): Container(),
-                              ],
-                            ),
-                          )
-                          .toList(),
-                  );
-                      }
-                    ),
+                                )
+                                .toList(),
+                          );
+                        return Container();
+                      }),
                 ),
               ),
               Row(
