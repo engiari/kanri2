@@ -43,7 +43,9 @@ class _ChatState extends State<Chat> {
     bloc = ChatBloc(widget.chatGroupPath);
     // .listen((_){}); を使うと処理部分でBlocのデータを受け取れる
     // ※受信したデータも送信時と同じ流れでチャット欄に表示
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      bloc.getMessege();
+    });
   }
 
   // 送信するデータ
@@ -80,31 +82,42 @@ class _ChatState extends State<Chat> {
                       stream: bloc.sendResultStream.stream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData)
+                          print(snapshot.data.message);
+                        if (snapshot.hasData)
                         message.add(snapshot.data);
                         return ListView(
                         padding: const EdgeInsets.all(16.0),
                         // message変数の中のデータをリスト表示（ListView Widget）
                         children: message
                           .map(
-                            (e) => Container(
-                              // 内側余白
-                              padding: EdgeInsets.all(1),
-                              // 外側余白
-                              margin: EdgeInsets.all(2),
-                              // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
-                              color: e.userName == userName
-                                  ? Colors.grey // 一致
-                                  : Colors.green.shade300, // それ以外
-                              child: ListTile(
-                                title: Text(
-                                  e.message,
-                                  style: TextStyle(
+                            (e) => Row(
+                              children: [
+                                e.userName == userName ? Expanded(flex: 1, child: Container()): Container(),
+                                Expanded(
+                                  flex: 9,
+                                  child: Container(
+                                    // 内側余白
+                                    padding: EdgeInsets.all(1),
+                                    // 外側余白
+                                    margin: EdgeInsets.all(2),
+                                    // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
                                     color: e.userName == userName
-                                        ? Colors.white // 一致
-                                        : Colors.black, // それ以外
+                                        ? Colors.grey // 一致
+                                        : Colors.green.shade300, // それ以外
+                                    child: ListTile(
+                                      title: Text(
+                                        e.message,
+                                        style: TextStyle(
+                                          color: e.userName == userName
+                                              ? Colors.white // 一致
+                                              : Colors.black, // それ以外
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                                e.userName != userName ? Expanded(flex: 1, child: Container()): Container(),
+                              ],
                             ),
                           )
                           .toList(),

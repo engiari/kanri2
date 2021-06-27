@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 // Event型をfromSnapshot関数でchatDataModel型に変換
 ChatDataModel chatDataModelFromSnapShot(DataSnapshot data) => ChatDataModel.fromSnapshot(data);
+ChatDataModel chatDataModelFromMap(Map<dynamic, dynamic> data) => ChatDataModel.fromMap(data);
 
 class ChatDataModel {
   String userName;
@@ -26,6 +27,13 @@ class ChatDataModel {
     date: snapshot.value["date"],
     message: snapshot.value["message"],
   );
+
+  factory ChatDataModel.fromMap(Map<dynamic, dynamic> data) => ChatDataModel(
+    userName: data["userName"],
+    date: data["date"],
+    message: data["message"],
+  );
+
 }
 
 

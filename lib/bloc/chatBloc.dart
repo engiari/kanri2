@@ -38,6 +38,16 @@ class ChatBloc {
     });
   }
 
+  getMessege(){
+    _notesReference.once().then((values) => (values.value as Map<dynamic, dynamic>).forEach((key, value) {
+      sendResultStream.sink.add(chatDataModelFromMap(value));
+
+      print(value);
+    }));
+
+  }
+
+
   dispose() {
     _sendStream.close();
     sendResultStream.close();

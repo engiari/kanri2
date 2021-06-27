@@ -48,7 +48,6 @@ class _GroupState extends State<Group> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       groupBloc.searchGroup();
-      //groupBloc.listGroup;
     });
   }
 
@@ -66,13 +65,15 @@ class _GroupState extends State<Group> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('グループ'),
-        leading: pageType != TYPE.home
-            ? IconButton(
+        title: showGroupChat != null ? const Text('チャット'): const Text('グループ'),
+        leading: showGroupChat != null ?
+             IconButton(
                 icon: Icon(
                   Icons.arrow_back,
                 ),
-                onPressed: null,
+                onPressed: (){setState(() {
+                  showGroupChat = null;
+                });}
               )
             : null,
       ),
