@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +49,8 @@ class _ChatState extends State<Chat> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //bloc.getMessege();
     });
+    print("chatGroupPath");
+    print(widget.chatGroupPath);
   }
 
   // 送信するデータ
@@ -87,9 +91,14 @@ class _ChatState extends State<Chat> {
                         // snapshot にデータがあった場合 ListView の中身を返す
                         if (snapshot.hasData)
                           return ListView(
+                            // true で上から降順表示、スクロールは最古のデータ（最下部）
+                            reverse: true,
+                            //shrinkWrap: true,
+
                             padding: const EdgeInsets.all(16.0),
                             // message変数の中のデータをリスト表示（ListView Widget）
-                            children: snapshot.data
+                            // .reversed で snapshot.data の map を降順にソート
+                            children: snapshot.data.reversed
                                 .map(
                                   (e) => Row(
                                     children: [
@@ -134,10 +143,13 @@ class _ChatState extends State<Chat> {
                                 )
                                 .toList(),
                           );
+                        //print("");
                         return Container();
                       }),
                 ),
               ),
+
+              // メッセージ入力欄
               Row(
                 children: <Widget>[
                   Expanded(

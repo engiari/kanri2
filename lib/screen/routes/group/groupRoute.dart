@@ -1,21 +1,12 @@
 import 'dart:async';
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/bloc/groupBloc.dart';
 import 'package:flutter_app7/model/groupData.dart';
 import 'package:flutter_app7/model/userData.dart';
-import 'package:flutter_app7/screen/util/groupModel.dart';
 import 'package:flutter_app7/screen/util/loadingNotifier.dart';
 import 'package:provider/provider.dart';
-
 import '../chatRoute.dart';
-import 'addGroup.dart';
 
 enum TYPE { home, search }
 
@@ -38,10 +29,10 @@ class _GroupState extends State<Group> {
 
   String searchEmail = '';
   String searchGroup = '';
-  GroupBloc groupBloc;
   String error = '';
   String groupName = '';
   String showGroupChat;
+  GroupBloc groupBloc;
 
   @override
   void initState() {
@@ -50,7 +41,6 @@ class _GroupState extends State<Group> {
       groupBloc.searchGroup();
     });
   }
-
 
   @override
   void dispose() {
@@ -138,8 +128,8 @@ class _GroupState extends State<Group> {
                       onPressed: () {
                         snapshot.data.groupName = groupName;
                         groupBloc.sendGroup(userData: snapshot.data);
-                        print("data");
-                        print(snapshot.data.email);
+                        //print("data");
+                        //print(snapshot.data.email);
                       },
                       child: Text('追加'),
                     ),
@@ -164,7 +154,7 @@ class _GroupState extends State<Group> {
           StreamBuilder<List<GroupData>>(
             stream: groupBloc.groupListController.stream,
             builder: (context, snapshot) {
-              print(snapshot.data);
+              //print(snapshot.data);
               if (snapshot.hasError) return Text("error");
               if (snapshot.hasData) {
 
@@ -179,14 +169,10 @@ class _GroupState extends State<Group> {
                       });
                     }, child: Text(e.groupName,
                         style: TextStyle(color: Colors.blue,fontSize: 30.0,)))).toList(),
-
-
                 );
-
               }
-              print("グループリスト");
-              print(snapshot.hasData);
-              print(snapshot.data);
+              //print("グループリスト");
+              //print(snapshot.data);
               return Container();
             },
           ),

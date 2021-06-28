@@ -33,7 +33,6 @@ class ChatDataModel {
     date: data["date"],
     message: data["message"],
   );
-
 }
 
 

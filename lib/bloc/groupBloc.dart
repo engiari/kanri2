@@ -145,7 +145,6 @@ class GroupBloc {
 
     });
   }
-
    */
 
   // 登録グループ検索
@@ -157,8 +156,8 @@ class GroupBloc {
     DocumentReference query =
     FirebaseFirestore.instance.collection('user').doc(data.userDocument);
 
-    print("data.userDocument");
-    print(data.userDocument);
+    //print("data.userDocument");
+    //print(data.userDocument);
 
     loading.setLoading(true);
 
@@ -173,12 +172,10 @@ class GroupBloc {
 
     groupListController.sink.add(groupData);
 
-    print(["myData", myData]);
-    print(["groupList", myData.data()["groupList"]]);
+    //print(["myData", myData]);
+    //print(["groupList", myData.data()["groupList"]]);
 
     loading.setLoading(false);
-
-
   }
 
 

@@ -22,7 +22,7 @@ Future<void> main() async {
   runZonedGuarded(() {
     runApp(App());
   }, (error, stackTrace) {
-    print('runZonedGuarded: Caught error in my root zone.');
+    //print('runZonedGuarded: Caught error in my root zone.');
     FirebaseCrashlytics.instance.recordError(error, stackTrace);
   });
 }
@@ -54,8 +54,8 @@ class App extends StatelessWidget {
               },
             ),
             builder: (context, model, child) {
-              // print("ccccccccccccccc");
-              print(model.loadingFlag);
+              //print("");
+              //print(model.loadingFlag);
               return Stack(
                 children: [
                   child,
