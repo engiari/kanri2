@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/util/loginModel.dart';
-import 'package:flutter_app7/screen/util/login_route.dart';
+import 'package:flutter_app7/screen/util/loginRoute.dart';
 import 'package:flutter_app7/screen/util/sharedDataController.dart';
 import 'group/groupRoute.dart';
 

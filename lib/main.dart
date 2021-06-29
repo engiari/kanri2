@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/routes/feedRoute.dart';
 import 'package:flutter_app7/screen/routes/group/groupRoute.dart';
 import 'package:flutter_app7/screen/util/loadingNotifier.dart';
-import 'package:flutter_app7/screen/util/login_route.dart';
+import 'package:flutter_app7/screen/util/loginRoute.dart';
 import 'package:flutter_app7/screen/routes/root.dart';
 import 'package:flutter_app7/screen/util/sharedDataController.dart';
 import 'package:flutter_app7/screen/util/signupRoute.dart';

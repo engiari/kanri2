@@ -37,8 +37,10 @@ class ChatBloc {
       sendResultStream.sink.add(chatModelList);
 
       //チャットのデータ表示
-      //print(event.snapshot.value);
+      print(event.snapshot.value);
     });
+
+
   }
 
   // send関数にRealtimeDatabaseにデータを送信する処理を書いている

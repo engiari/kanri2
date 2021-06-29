@@ -1,11 +1,12 @@
 import 'dart:collection';
-
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/bloc/chatBloc.dart';
 import 'package:flutter_app7/model/chatDataModel.dart';
+import 'package:flutter_app7/screen/util/loadingNotifier.dart';
 import 'package:flutter_app7/screen/util/loginModel.dart';
 import 'package:flutter_app7/screen/util/sharedDataController.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,8 @@ class Chat extends StatefulWidget {
 
   String title;
 
+  String userName;
+
   Chat(this.chatGroupPath);
 
   @override
@@ -24,8 +27,19 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  // FirebaseAuthenticationからuidを取得して userName に入れる
-  final String userName = FirebaseAuth.instance.currentUser.uid;
+  // FirebaseAuthenticationからuidを取得して userUid に入れる
+  final String userUid = FirebaseAuth.instance.currentUser.uid;
+
+
+  final userName = FirebaseFirestore.instance
+      .collection('user')
+      .get()
+      .then((value) {
+    value.docs.first.data()['userName'];
+    print("ユーザー名:");
+    print(value.docs.first.data()['userName']);
+  }).toString();
+
 
   // ChatBloc という場所を用意して initState の中身を入れる
   ChatBloc bloc;
@@ -60,7 +74,8 @@ class _ChatState extends State<Chat> {
       // Databaseに登録するデータ内容を ChatDataModel クラスで定義
       ChatDataModel sendData = ChatDataModel()
         // ユーザー名、メッセージ、送信時間をbloc側に渡す
-        ..userName = userName
+        ..userUid = userUid
+        //..userName = userName
         ..message = sendMessage
         ..date = DateTime.now();
       bloc.send(sendData);
@@ -73,11 +88,16 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Provider<ChatBloc>(
+
+      // (_)パラメータを使わないことの明示
       create: (_) => bloc,
       dispose: (_, bloc) => bloc.dispose(),
       child: Scaffold(
         backgroundColor: Colors.white,
+
         body: Center(
           child: Column(
             children: <Widget>[
@@ -89,13 +109,14 @@ class _ChatState extends State<Chat> {
                       stream: bloc.sendResultStream.stream,
                       builder: (context, snapshot) {
                         // snapshot にデータがあった場合 ListView の中身を返す
-                        if (snapshot.hasData)
+                        if (snapshot.hasData) {
                           return ListView(
                             // true で上から降順表示、スクロールは最古のデータ（最下部）
                             reverse: true,
                             //shrinkWrap: true,
 
                             padding: const EdgeInsets.all(16.0),
+
                             // message変数の中のデータをリスト表示（ListView Widget）
                             // .reversed で snapshot.data の map を降順にソート
                             children: snapshot.data.reversed
@@ -104,7 +125,7 @@ class _ChatState extends State<Chat> {
                                     children: [
                                       // Expanded の flex: で比率を設定して配置するのがベスト
                                       // e.userName と userName が一致する場合の表示（自分）
-                                      e.userName == userName
+                                      e.userUid == userUid
                                           ? Expanded(
                                               flex: 1, child: Container())
                                           : Container(),
@@ -112,11 +133,15 @@ class _ChatState extends State<Chat> {
                                         flex: 9,
                                         child: Container(
                                           // 内側余白
-                                          padding: EdgeInsets.all(1),
+                                          padding: EdgeInsets.only(
+                                              top: 8.0,
+                                              right: 8.0,
+                                              bottom: 8.0),
                                           // 外側余白
                                           margin: EdgeInsets.all(2),
+
                                           // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
-                                          color: e.userName == userName
+                                          color: e.userUid == userUid
                                               ? Colors.grey // 一致
                                               : Colors.green.shade300,
                                           // それ以外
@@ -124,7 +149,7 @@ class _ChatState extends State<Chat> {
                                             title: Text(
                                               e.message,
                                               style: TextStyle(
-                                                color: e.userName == userName
+                                                color: e.userUid == userUid
                                                     ? Colors.white // 一致
                                                     : Colors.black, // それ以外
                                               ),
@@ -134,7 +159,7 @@ class _ChatState extends State<Chat> {
                                       ),
 
                                       // e.userName と userName が不一致の場合の表示（自分以外）
-                                      e.userName != userName
+                                      e.userUid != userUid
                                           ? Expanded(
                                               flex: 1, child: Container())
                                           : Container(),
@@ -143,6 +168,7 @@ class _ChatState extends State<Chat> {
                                 )
                                 .toList(),
                           );
+                        }
                         //print("");
                         return Container();
                       }),
@@ -169,7 +195,7 @@ class _ChatState extends State<Chat> {
                       // false: 最大文字数を超えても入力可能（超えると赤文字に）
                       maxLengthEnforced: false,
                       style: TextStyle(color: Colors.black),
-                      // パスワード入力のように入力している値をマスク
+                      // true でパスワード入力のように入力している値をマスク
                       obscureText: false,
                       // 入力できる行数の最大行数を設定
                       maxLines: 1,
