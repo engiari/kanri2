@@ -5,6 +5,7 @@ class UserData {
   String thumbnailUrl;
   String documentId;
   String groupName;
+  String userName;
 
   UserData({
       this.uid,
@@ -12,6 +13,7 @@ class UserData {
       this.email,
       this.thumbnailUrl,
       this.documentId,
-      this.groupName
+      this.groupName,
+      this.userName,
   });
 }

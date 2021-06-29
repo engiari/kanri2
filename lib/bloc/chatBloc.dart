@@ -18,29 +18,21 @@ class ChatBloc {
   ChatBloc(String groupID) {
     // FirebaseDatabaseの指定 groupID を取得
     _notesReference = FirebaseDatabase.instance.reference().child(groupID);
-    print("groupID: $groupID");
 
     // RealTimeDatabaseにデータ追加があった時に通知が .onChildAdded に飛び、.listen で受け取る
     // RealTimeDatabaseからは Eventという型でデータが送られて来る
     _notesReference.onChildAdded.listen((Event event) {
       // event.snapshot.value という変数の中の ["userName"] に入っている値を取って自分の userName と比較
       // RealTimeDatabaseからの通知は誰がデータを入れたかは関係なくデータが飛んでくるため
-      /*
-      if (userName != event.snapshot.value["userName"])
-        sendResultStream.sink.add(chatDataModelFromSnapShot(event.snapshot));
-       */
-
-        // サーバに登録された自分のデータを表示させる処理
-        // chatBlocは chatDataModel という型でやり取りを行うのでEvent型をchatDataModelFromSnapShot関数でchatDataModel型に変換（chatDataModelFromSnapShot(event.snapshot)）
-        // 変換処理はchatDataModel.dartのchatDataModelクラス内に変換用の関数がある
+      // サーバに登録された自分のデータを表示させる処理
+      // chatBlocは chatDataModel という型でやり取りを行うのでEvent型をchatDataModelFromSnapShot関数でchatDataModel型に変換（chatDataModelFromSnapShot(event.snapshot)）
+      // 変換処理はchatDataModel.dartのchatDataModelクラス内に変換用の関数がある
       chatModelList.add(chatDataModelFromSnapShot(event.snapshot));
       sendResultStream.sink.add(chatModelList);
 
       //チャットのデータ表示
       print(event.snapshot.value);
     });
-
-
   }
 
   // send関数にRealtimeDatabaseにデータを送信する処理を書いている
@@ -56,7 +48,9 @@ class ChatBloc {
   getMessege(){
     _notesReference.once().then((values) => (values.value as Map<dynamic, dynamic>).forEach((key, value) {
       //sendResultStream.sink.add(chatDataModelFromMap(value));
+      print(value);
     }));
+
   }
 
   dispose() {

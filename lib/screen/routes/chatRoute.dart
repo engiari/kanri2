@@ -31,10 +31,9 @@ class _ChatState extends State<Chat> {
   final String userUid = FirebaseAuth.instance.currentUser.uid;
 
 
-  final userName = FirebaseFirestore.instance
-      .collection('user')
-      .get()
-      .then((value) {
+  // ユーザー名の取得
+  final userName =
+  FirebaseFirestore.instance.collection('user').get().then((value) {
     value.docs.first.data()['userName'];
     print("ユーザー名:");
     print(value.docs.first.data()['userName']);
@@ -73,9 +72,9 @@ class _ChatState extends State<Chat> {
       // テキストデータが入っていれば以下の処理
       // Databaseに登録するデータ内容を ChatDataModel クラスで定義
       ChatDataModel sendData = ChatDataModel()
-        // ユーザー名、メッセージ、送信時間をbloc側に渡す
+      // ユーザー名、メッセージ、送信時間をbloc側に渡す
         ..userUid = userUid
-        //..userName = userName
+        ..userName = userName
         ..message = sendMessage
         ..date = DateTime.now();
       bloc.send(sendData);
@@ -122,50 +121,50 @@ class _ChatState extends State<Chat> {
                             children: snapshot.data.reversed
                                 .map(
                                   (e) => Row(
-                                    children: [
-                                      // Expanded の flex: で比率を設定して配置するのがベスト
-                                      // e.userName と userName が一致する場合の表示（自分）
-                                      e.userUid == userUid
-                                          ? Expanded(
-                                              flex: 1, child: Container())
-                                          : Container(),
-                                      Expanded(
-                                        flex: 9,
-                                        child: Container(
-                                          // 内側余白
-                                          padding: EdgeInsets.only(
-                                              top: 8.0,
-                                              right: 8.0,
-                                              bottom: 8.0),
-                                          // 外側余白
-                                          margin: EdgeInsets.all(2),
+                                children: [
+                                  // Expanded の flex: で比率を設定して配置するのがベスト
+                                  // e.userName と userName が一致する場合の表示（自分）
+                                  e.userUid == userUid
+                                      ? Expanded(
+                                      flex: 1, child: Container())
+                                      : Container(),
+                                  Expanded(
+                                    flex: 9,
+                                    child: Container(
+                                      // 内側余白
+                                      padding: EdgeInsets.only(
+                                          top: 8.0,
+                                          right: 8.0,
+                                          bottom: 8.0),
+                                      // 外側余白
+                                      margin: EdgeInsets.all(2),
 
-                                          // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
-                                          color: e.userUid == userUid
-                                              ? Colors.grey // 一致
-                                              : Colors.green.shade300,
-                                          // それ以外
-                                          child: ListTile(
-                                            title: Text(
-                                              e.message,
-                                              style: TextStyle(
-                                                color: e.userUid == userUid
-                                                    ? Colors.white // 一致
-                                                    : Colors.black, // それ以外
-                                              ),
-                                            ),
+                                      // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
+                                      color: e.userUid == userUid
+                                          ? Colors.grey // 一致
+                                          : Colors.green.shade300,
+                                      // それ以外
+                                      child: ListTile(
+                                        title: Text(
+                                          e.message,
+                                          style: TextStyle(
+                                            color: e.userUid == userUid
+                                                ? Colors.white // 一致
+                                                : Colors.black, // それ以外
                                           ),
                                         ),
                                       ),
-
-                                      // e.userName と userName が不一致の場合の表示（自分以外）
-                                      e.userUid != userUid
-                                          ? Expanded(
-                                              flex: 1, child: Container())
-                                          : Container(),
-                                    ],
+                                    ),
                                   ),
-                                )
+
+                                  // e.userName と userName が不一致の場合の表示（自分以外）
+                                  e.userUid != userUid
+                                      ? Expanded(
+                                      flex: 1, child: Container())
+                                      : Container(),
+                                ],
+                              ),
+                            )
                                 .toList(),
                           );
                         }
