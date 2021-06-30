@@ -25,7 +25,7 @@ class _GroupState extends State<Group> {
   final groupController = TextEditingController();
   final StreamController<UserData> controller = StreamController<UserData>();
   final StreamController<List<dynamic>> groupListController =
-  StreamController<List<dynamic>>();
+      StreamController<List<dynamic>>();
 
   String searchEmail = '';
   String searchGroup = '';
@@ -55,131 +55,159 @@ class _GroupState extends State<Group> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: showGroupChat != null ? const Text('チャット'): const Text('グループ'),
-        leading: showGroupChat != null ?
-             IconButton(
+        title: showGroupChat != null ? const Text('チャット') : const Text('グループ'),
+        leading: showGroupChat != null
+            ? IconButton(
                 icon: Icon(
                   Icons.arrow_back,
                 ),
-                onPressed: (){setState(() {
-                  showGroupChat = null;
-                });}
-              )
+                onPressed: () {
+                  setState(() {
+                    showGroupChat = null;
+                  });
+                })
             : null,
       ),
-      body: showGroupChat != null ? Chat(showGroupChat): Column(
-        children: <Widget>[
-          // グループ名の表示
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'グループ登録したいメールアドレス',
-            ),
-            controller: textController,
-            onChanged: (text) {
-              searchEmail = text;
-            },
-          ),
-          Text(error, style: TextStyle(color: Colors.red)),
-          FlatButton(
-            color: Colors.blue,
-            child: Text("検索する",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  // 太文字
-                  fontWeight: FontWeight.bold,
-                )),
-            onPressed: () async {
-              if (searchEmail.isEmpty) {
-                setState(() {
-                  error = "Emailを入力してください";
-                });
-                return;
-              }
-              setState(() {
-                error = "";
-              });
-              groupBloc.searchUser(searchEmail);
-            },
-          ),
-          StreamBuilder<UserData>(
-            stream: groupBloc.controller.stream,
-            builder: (context, snapshot) {
-              Widget errorWidget = Container();
-              if (snapshot.hasError)
-                errorWidget =
-                    Text(snapshot.error, style: TextStyle(color: Colors.red));
-              if (snapshot.hasData)
-                return Column(
-                  children: [
-                    Text("一致したメールアドレス"),
-                    Text(snapshot.data.email,
-                        style: TextStyle(color: Colors.red)),
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: '分かりやすいグループ名を登録しましょう',
-                      ),
-                      controller: groupController,
-                      onChanged: (text) {
-                        groupName = text;
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        snapshot.data.groupName = groupName;
-                        groupBloc.sendGroup(userData: snapshot.data);
-                        //print("data");
-                        //print(snapshot.data.email);
-                      },
-                      child: Text('追加'),
-                    ),
-                  ],
-                );
-              return Column(
+      body: showGroupChat != null
+          ? Chat(showGroupChat)
+          : Center(
+              child: Column(
                 children: <Widget>[
-                  Container(
-                    color: Colors.grey,
-                    // 内側余白
-                    padding: EdgeInsets.all(1),
-                    // 外側余白
-                    margin: EdgeInsets.all(20),
+                  // グループ名の表示
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'グループ登録したいメールアドレス',
+                    ),
+                    controller: textController,
+                    onChanged: (text) {
+                      searchEmail = text;
+                    },
                   ),
-                  Text("グループリスト",
-                      style: TextStyle(color: Colors.black,fontSize: 15.0,)),
-                ],
-              );
-            },
-          ),
-
-          StreamBuilder<List<GroupData>>(
-            stream: groupBloc.groupListController.stream,
-            builder: (context, snapshot) {
-              //print(snapshot.data);
-              if (snapshot.hasError) return Text("error");
-              if (snapshot.hasData) {
-
-                return Column(
-
-                  //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
-                    //children: groupBloc.searchGroup(searchGroup),
-
-                    children: snapshot.data.map((GroupData e) => TextButton(onPressed: (){
+                  Text(error, style: TextStyle(color: Colors.red)),
+                  FlatButton(
+                    color: Colors.blue,
+                    child: Text("検索する",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          // 太文字
+                          fontWeight: FontWeight.bold,
+                        )),
+                    onPressed: () async {
+                      if (searchEmail.isEmpty) {
+                        setState(() {
+                          error = "Emailを入力してください";
+                        });
+                        return;
+                      }
                       setState(() {
-                        showGroupChat = e.documentPath;
+                        error = "";
                       });
-                    }, child: Text(e.groupName,
-                        style: TextStyle(color: Colors.blue,fontSize: 30.0,)))).toList(),
-                );
-              }
-              //print("グループリスト");
-              //print(snapshot.data);
-              return Container();
-            },
-          ),
-        ],
-      ),
+                      groupBloc.searchUser(searchEmail);
+                    },
+                  ),
+                  StreamBuilder<UserData>(
+                    stream: groupBloc.controller.stream,
+                    builder: (context, snapshot) {
+                      Widget errorWidget = Container();
+                      if (snapshot.hasError)
+                        errorWidget = Text(snapshot.error,
+                            style: TextStyle(color: Colors.red));
+                      if (snapshot.hasData)
+                        return Column(
+                          children: [
+                            Text("一致したメールアドレス"),
+                            Text(snapshot.data.email,
+                                style: TextStyle(color: Colors.red)),
+                            TextField(
+                              decoration: InputDecoration(
+                                hintText: '分かりやすいグループ名を登録しましょう',
+                              ),
+                              controller: groupController,
+                              onChanged: (text) {
+                                groupName = text;
+                              },
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                snapshot.data.groupName = groupName;
+                                groupBloc.sendGroup(userData: snapshot.data);
+                                //print("data");
+                                //print(snapshot.data.email);
+                              },
+                              child: Text('追加'),
+                            ),
+                          ],
+                        );
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            color: Colors.white,
+                            // 内側余白
+                            padding: EdgeInsets.all(1),
+                            // 外側余白
+                            margin: EdgeInsets.all(30),
+                          ),
+                          Text("グループリスト",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15.0,
+                                fontStyle: FontStyle.italic,
+                                decoration: TextDecoration.underline,
+                              )),
+                        ],
+                      );
+                    },
+                  ),
 
-      /*
+                  StreamBuilder<List<GroupData>>(
+                    stream: groupBloc.groupListController.stream,
+                    builder: (context, snapshot) {
+                      //print(snapshot.data);
+                      if (snapshot.hasError) return Text("error");
+                      if (snapshot.hasData) {
+                        return Column(
+                          children: [
+                            Container(
+                              /*
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.red),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                */
+                              width: double.infinity,
+                              color: Colors.blue.shade200,
+                              child: Column(
+                                //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
+                                //children: groupBloc.searchGroup(searchGroup),
+
+                                children: snapshot.data
+                                    .map((GroupData e) => TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            showGroupChat = e.documentPath;
+                                          });
+                                        },
+                                        child: Text(e.groupName,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 30.0,
+                                            ))))
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      //print("グループリスト");
+                      //print(snapshot.data);
+                      return Container();
+                    },
+                  ),
+                ],
+              ),
+
+              /*
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -189,6 +217,7 @@ class _GroupState extends State<Group> {
         child: const Icon(Icons.add),
       ),
        */
+            ),
     );
 
     /*

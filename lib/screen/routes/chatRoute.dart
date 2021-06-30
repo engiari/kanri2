@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/bloc/chatBloc.dart';
 import 'package:flutter_app7/model/chatDataModel.dart';
+import 'package:flutter_app7/model/groupData.dart';
+import 'package:flutter_app7/model/userData.dart';
 import 'package:flutter_app7/screen/util/loadingNotifier.dart';
 import 'package:flutter_app7/screen/util/loginModel.dart';
 import 'package:flutter_app7/screen/util/sharedDataController.dart';
@@ -31,13 +34,15 @@ class _ChatState extends State<Chat> {
   final String userUid = FirebaseAuth.instance.currentUser.uid;
 
 
+
   // ユーザー名の取得
+  LoginModel data = SharedDataController().getData();
+
   final userName =
-  FirebaseFirestore.instance.collection('user').get().then((value) {
-    value.docs.first.data()['userName'];
-    print("ユーザー名:");
-    print(value.docs.first.data()['userName']);
-  }).toString();
+      FirebaseFirestore.instance.collection("user")
+      .doc(data.userDocument)
+      .get();
+
 
 
   // ChatBloc という場所を用意して initState の中身を入れる
@@ -82,7 +87,7 @@ class _ChatState extends State<Chat> {
       _controller.clear();
       // 送信するメッセージを保持していた sendMessage に null を入れる（送信した後のため）
       sendMessage = null;
-    }
+   }
   }
 
   @override

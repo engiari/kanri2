@@ -89,9 +89,12 @@ class _FeedState extends State<Feed> {
               color: Colors.grey.shade200,
               child: Row(
                 children: [
-
-                  Text("時間帯"),
                   Expanded(
+                    flex: 3,
+                    child: Text("時間帯", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 16,
                     child: FormBuilderRadioGroup(
                       wrapAlignment: WrapAlignment.center,
                       onChanged: (String text) {
@@ -139,7 +142,7 @@ class _FeedState extends State<Feed> {
                   child: Container(
                       width: 300,
                       child: _image == null
-                          ? Text('画像が選択されていません')
+                          ? Text('画像が選択されていません', textAlign: TextAlign.center)
                           : Image.file(_image)),
                 ),
                 Row(
@@ -159,29 +162,46 @@ class _FeedState extends State<Feed> {
                 )
               ],
             ),
+
+            // 以下ラジオボタン項目
             Container(
               height: 20,
             ),
             Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Spacer(),
-                      Expanded(
-                      child: Text("非常に良い", textAlign: TextAlign.center),),
-                    Spacer(),Spacer(),
-                      Expanded(
+                Container(
+                  child: Row(
+                      children: [
+                    //Spacer(),
+                        Expanded(
+                          flex: 1,
+                          child: Text("", textAlign: TextAlign.center),),
+                    Expanded(
+                        flex: 2,
+                      child: Text("非常に良い", textAlign: TextAlign.left),),
+                        Expanded(
+                          flex: 1,
+                          child: Text("", textAlign: TextAlign.center),
+                        ),
+                    Expanded(
+                      flex: 2,
                       child: Text("非常に悪い", textAlign: TextAlign.center),
+
                     ),
+
                   ],
+                ),
                 ),
                 Container(
                   color: Colors.grey.shade200,
                   child: Row(
                     children: [
-                      Text("体調"),
                       Expanded(
+                        flex: 3,
+                        child: Text("体調", textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 16,
                         child: FormBuilderRadioGroup(
                           wrapAlignment: WrapAlignment.center,
                           onChanged: (text) {
@@ -215,8 +235,12 @@ class _FeedState extends State<Feed> {
               color: Colors.white,
               child: Row(
                 children: [
-                  Text("疲労度"),
                   Expanded(
+                    flex: 3,
+                    child: Text("疲労度", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 16,
                     child: FormBuilderRadioGroup(
                       wrapAlignment: WrapAlignment.center,
                       onChanged: (text) {
@@ -248,8 +272,12 @@ class _FeedState extends State<Feed> {
               color: Colors.grey.shade200,
               child: Row(
                 children: [
-                  Text("食欲"),
                   Expanded(
+                    flex: 3,
+                    child: Text("食欲", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 16,
                     child: FormBuilderRadioGroup(
                       wrapAlignment: WrapAlignment.center,
                       onChanged: (text) {
@@ -277,12 +305,18 @@ class _FeedState extends State<Feed> {
                 ],
               ),
             ),
+
+
             Container(
               color: Colors.white,
               child: Row(
                 children: [
-                  Text("便"),
                   Expanded(
+                    flex: 3,
+                    child: Text("便", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 16,
                     child: FormBuilderRadioGroup(
                       wrapAlignment: WrapAlignment.center,
                       onChanged: (text) {
@@ -309,7 +343,39 @@ class _FeedState extends State<Feed> {
                   ),
                 ],
               ),
-            )
+            ),
+            Container(
+              child: Row(
+                children: [
+                  //Spacer(),
+                  Expanded(
+                    flex: 1,
+                    child: Text("", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text("快便", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text("普通", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text("軟便", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text("下痢", textAlign: TextAlign.center),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text("便秘", textAlign: TextAlign.center),
+                  ),
+                ],
+              ),
+            ),
+
           ],
         ),
       ),
@@ -363,28 +429,7 @@ class _FeedState extends State<Feed> {
                 height: 1.1,
               ),
             ),
-            /*
-            Text("食事メニューを入力してください",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 20.0,
-                  // 太文字
-                  fontWeight: FontWeight.bold,
-                  // 文字間隔
-                  letterSpacing: 0.0,
-                  // 行間
-                  height: 1.3,
-                )),
-            //Text("朝食"),
 
-             */
-
-            /* FlatButton(
-              child: Text("朝食"),
-              onPressed: () {},
-            ),
-            */
             Container(
               // 内側余白
               padding: EdgeInsets.all(1),
@@ -460,6 +505,9 @@ class _FeedState extends State<Feed> {
                       fatigue: _fatigue,
                       appetite: _appetite,
                       defecation: _defecation);
+
+                  // フォームの内容リセット
+                  _formKey.currentState.reset();
                 }
               },
             ),
