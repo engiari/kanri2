@@ -63,6 +63,9 @@ class GroupBloc {
       eachGroupList.add((targetData.data()["groupList"] as List<dynamic>)
           .firstWhere((element) => e == element, orElse: () => null));
     });
+    print("グループリストDocumentReference");
+    print(myData.data()["groupList"]);
+
     bool duplicate = false;
     await Future.forEach(eachGroupList, (element) async {
       if (element != null){

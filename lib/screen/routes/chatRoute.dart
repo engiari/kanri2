@@ -21,29 +21,17 @@ class Chat extends StatefulWidget {
 
   String title;
 
-  String userName;
-
   Chat(this.chatGroupPath);
 
   @override
   _ChatState createState() => _ChatState();
 }
 
-class _ChatState extends State<Chat> {
+class _ChatState extends State<Chat>{
+  final StreamController<String> getUserNameStream = StreamController<String>();
+
   // FirebaseAuthenticationからuidを取得して userUid に入れる
   final String userUid = FirebaseAuth.instance.currentUser.uid;
-
-
-
-  // ユーザー名の取得
-  LoginModel data = SharedDataController().getData();
-
-  final userName =
-      FirebaseFirestore.instance.collection("user")
-      .doc(data.userDocument)
-      .get();
-
-
 
   // ChatBloc という場所を用意して initState の中身を入れる
   ChatBloc bloc;
@@ -57,6 +45,9 @@ class _ChatState extends State<Chat> {
   // テキストエリアのコントロール
   final _controller = TextEditingController();
 
+
+  String myUserName;
+
   //  initState() という関数内でBlocのデータを受け取る
   void initState() {
     super.initState();
@@ -66,22 +57,35 @@ class _ChatState extends State<Chat> {
     // WidgetsBinding.instance.addPostFrameCallback((_){}); でレイアウトが表示された後に実行する
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //bloc.getMessege();
+
+      // chatBlocからユーザー名の受け取り
+      bloc.getUserName();
+      print("chatBlocからchatRouteで受け取ったユーザー名");
+      print(myUserName);
+
     });
-    print("chatGroupPath");
-    print(widget.chatGroupPath);
+
+
+    //print("chatGroupPath");
+    //print(widget.chatGroupPath);
   }
+
 
   // 送信するデータ
   void _sendMessage() {
     if (sendMessage != null) {
       // テキストデータが入っていれば以下の処理
+
       // Databaseに登録するデータ内容を ChatDataModel クラスで定義
       ChatDataModel sendData = ChatDataModel()
-      // ユーザー名、メッセージ、送信時間をbloc側に渡す
+      // Uid、ユーザー名、メッセージ、送信時間をbloc側に渡す
         ..userUid = userUid
-        ..userName = userName
+        ..userName = myUserName
         ..message = sendMessage
         ..date = DateTime.now();
+      print("chatRouteから送信ユーザー名");
+      print(myUserName);
+
       bloc.send(sendData);
       // TextFieldの入力文字を初期化
       _controller.clear();
@@ -92,10 +96,7 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Provider<ChatBloc>(
-
       // (_)パラメータを使わないことの明示
       create: (_) => bloc,
       dispose: (_, bloc) => bloc.dispose(),
