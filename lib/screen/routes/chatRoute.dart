@@ -27,7 +27,7 @@ class Chat extends StatefulWidget {
   _ChatState createState() => _ChatState();
 }
 
-class _ChatState extends State<Chat>{
+class _ChatState extends State<Chat> {
   final StreamController<String> getUserNameStream = StreamController<String>();
 
   // FirebaseAuthenticationからuidを取得して userUid に入れる
@@ -45,6 +45,7 @@ class _ChatState extends State<Chat>{
   // テキストエリアのコントロール
   final _controller = TextEditingController();
 
+  String userName;
 
   String myUserName;
 
@@ -58,18 +59,15 @@ class _ChatState extends State<Chat>{
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //bloc.getMessege();
 
-      // chatBlocからユーザー名の受け取り
       bloc.getUserName();
-      print("chatBlocからchatRouteで受け取ったユーザー名");
+      /*
+      print("chatBlocからchatRouteで受け取ったユーザー名1");
       print(myUserName);
-
+       */
     });
-
-
     //print("chatGroupPath");
     //print(widget.chatGroupPath);
   }
-
 
   // 送信するデータ
   void _sendMessage() {
@@ -78,7 +76,7 @@ class _ChatState extends State<Chat>{
 
       // Databaseに登録するデータ内容を ChatDataModel クラスで定義
       ChatDataModel sendData = ChatDataModel()
-      // Uid、ユーザー名、メッセージ、送信時間をbloc側に渡す
+        // Uid、ユーザー名、メッセージ、送信時間をbloc側に渡す
         ..userUid = userUid
         ..userName = myUserName
         ..message = sendMessage
@@ -91,7 +89,7 @@ class _ChatState extends State<Chat>{
       _controller.clear();
       // 送信するメッセージを保持していた sendMessage に null を入れる（送信した後のため）
       sendMessage = null;
-   }
+    }
   }
 
   @override
@@ -102,10 +100,24 @@ class _ChatState extends State<Chat>{
       dispose: (_, bloc) => bloc.dispose(),
       child: Scaffold(
         backgroundColor: Colors.white,
-
         body: Center(
           child: Column(
             children: <Widget>[
+
+
+              Container(
+                // chatBlocからユーザー名の受け取り
+                child: StreamBuilder<String>(
+                    stream: bloc.getUserNameStream.stream,
+                    builder: (context, snapshot) {
+                      myUserName = snapshot.data;
+                      print("chatBlocからchatRouteで受け取ったユーザー名2");
+                      print(myUserName);
+                      return Container();
+                    }),
+              ),
+
+
               Container(
                 child: Expanded(
                   // StreamBuilder：Blocから受け取ったデータをレイアウトで表示させる時の要素
@@ -113,6 +125,7 @@ class _ChatState extends State<Chat>{
                   child: StreamBuilder<List<ChatDataModel>>(
                       stream: bloc.sendResultStream.stream,
                       builder: (context, snapshot) {
+
                         // snapshot にデータがあった場合 ListView の中身を返す
                         if (snapshot.hasData) {
                           return ListView(
@@ -127,54 +140,56 @@ class _ChatState extends State<Chat>{
                             children: snapshot.data.reversed
                                 .map(
                                   (e) => Row(
-                                children: [
-                                  // Expanded の flex: で比率を設定して配置するのがベスト
-                                  // e.userName と userName が一致する場合の表示（自分）
-                                  e.userUid == userUid
-                                      ? Expanded(
-                                      flex: 1, child: Container())
-                                      : Container(),
-                                  Expanded(
-                                    flex: 9,
-                                    child: Container(
-                                      // 内側余白
-                                      padding: EdgeInsets.only(
-                                          top: 8.0,
-                                          right: 8.0,
-                                          bottom: 8.0),
-                                      // 外側余白
-                                      margin: EdgeInsets.all(2),
+                                    children: [
+                                      // Expanded の flex: で比率を設定して配置するのがベスト
+                                      // e.userName と userName が一致する場合の表示（自分）
+                                      e.userUid == userUid
+                                          ? Expanded(
+                                              flex: 1, child: Container())
+                                          : Container(),
+                                      Expanded(
+                                        flex: 9,
+                                        child: Container(
+                                          // 内側余白
+                                          padding: EdgeInsets.only(
+                                              top: 8.0,
+                                              right: 8.0,
+                                              bottom: 8.0),
+                                          // 外側余白
+                                          margin: EdgeInsets.all(2),
 
-                                      // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
-                                      color: e.userUid == userUid
-                                          ? Colors.grey // 一致
-                                          : Colors.green.shade300,
-                                      // それ以外
-                                      child: ListTile(
-                                        title: Text(
-                                          e.message,
-                                          style: TextStyle(
-                                            color: e.userUid == userUid
-                                                ? Colors.white // 一致
-                                                : Colors.black, // それ以外
+                                          // chatDataModelのデータ e.userName が自身の userName と一致しているか判定して表示色変更
+                                          color: e.userUid == userUid
+                                              ? Colors.grey // 一致
+                                              : Colors.green.shade300,
+                                          // それ以外
+                                          child: ListTile(
+                                            title: Text(
+                                              e.message,
+                                              style: TextStyle(
+                                                color: e.userUid == userUid
+                                                    ? Colors.white // 一致
+                                                    : Colors.black, // それ以外
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                      // e.userName と userName が不一致の場合の表示（自分以外）
+                                      e.userUid != userUid
+                                          ? Expanded(
+                                              flex: 1, child: Container())
+                                          : Container(),
+                                    ],
                                   ),
-
-                                  // e.userName と userName が不一致の場合の表示（自分以外）
-                                  e.userUid != userUid
-                                      ? Expanded(
-                                      flex: 1, child: Container())
-                                      : Container(),
-                                ],
-                              ),
-                            )
+                                )
                                 .toList(),
+
                           );
                         }
                         //print("");
+                        print("ユーザー名");
+                        print(userUid);
                         return Container();
                       }),
                 ),
