@@ -113,7 +113,7 @@ class _ChatState extends State<Chat> {
                       myUserName = snapshot.data;
                       print("chatBlocからchatRouteで受け取ったユーザー名2");
                       print(myUserName);
-                      return Container();
+                      return Text(myUserName);
                     }),
               ),
 
