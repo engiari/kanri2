@@ -21,10 +21,15 @@ class Info extends StatefulWidget {
 
 class _InfoState extends State<Info> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
   @override
   void initState() {
     super.initState();
-
+    _firebaseMessaging.requestPermission(
+      sound: true,
+      badge: true,
+      alert: true,
+    );
     _firebaseMessaging.getToken().then((String token) {
       print("$token");
     });
