@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/routes/feedRoute.dart';
 import 'package:flutter_app7/screen/routes/group/groupRoute.dart';
@@ -13,12 +14,17 @@ import 'package:flutter_app7/screen/util/signupRoute.dart';
 import 'package:flutter_app7/screen/topRoute.dart';
 import 'package:provider/provider.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("バックグラウンドでメッセージを受け取りました");
+}
 
 // クラッシュレポート
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await SharedDataController.init();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runZonedGuarded(() {
     runApp(App());
   }, (error, stackTrace) {
