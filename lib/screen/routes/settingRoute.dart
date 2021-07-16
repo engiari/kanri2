@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app7/screen/util/loginModel.dart';
 import 'package:flutter_app7/screen/util/loginRoute.dart';
 import 'package:flutter_app7/screen/util/sharedDataController.dart';
+import 'package:package_info/package_info.dart';
 import 'group/groupRoute.dart';
 
 class Setting extends StatelessWidget {
@@ -39,12 +40,24 @@ class Setting extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        // ユーザー情報を表示
-        child: Text(
-          FirebaseAuth.instance.currentUser.email,
-          style: Theme.of(context).textTheme.headline4,
-        ),
+      body: Column(
+        children: [
+          Container(
+            // ユーザー情報を表示
+            child: Text(
+              FirebaseAuth.instance.currentUser.email,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          TextButton(
+            child: Text('ライセンスページの表示'),
+            onPressed: () => showLicensePage(
+              context: context,
+              applicationName: 'BBF',
+              applicationVersion: '0.0.1',
+            ),
+          ),
+        ],
       ),
     );
   }

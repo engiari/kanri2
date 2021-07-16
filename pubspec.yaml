@@ -52,11 +52,14 @@ dependencies:
   font_awesome_flutter: ^9.0.0
   firebase_messaging: ^10.0.3
   plugin_platform_interface: ^2.0.0
-  flutter_local_notifications: ^6.0.0
+  flutter_local_notifications: ^5.0.0+4
   google_fonts: ^2.1.0
   firebase_core_platform_interface: ^4.0.1
   firebase_messaging_platform_interface: ^3.0.2
   http: ^0.13.0
+  # ライセンス表示
+  package_info: ^2.0.2
+
 
 
 
