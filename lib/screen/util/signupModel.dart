@@ -35,7 +35,7 @@ class SignUpModel extends ChangeNotifier {
       email: mail,
       password: password,
     ))
-        .user;
+        .user!;
     final email = user.email;
 
     FirebaseFirestore.instance.collection('user').doc(user.uid).set(

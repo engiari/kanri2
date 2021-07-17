@@ -33,7 +33,7 @@ class DiaryBloc {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0))
-        .onError((error, stackTrace) =>
+        .onError((dynamic error, stackTrace) =>
         Fluttertoast.showToast(
             msg: "データの取得に失敗しました",
             toastLength: Toast.LENGTH_SHORT,

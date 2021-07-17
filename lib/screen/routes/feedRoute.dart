@@ -22,15 +22,15 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-  File _image;
+  File? _image;
   final picker = ImagePicker();
-  List<String> timeZoneListJp = ["朝", "昼", "夜"];
+  List<String?> timeZoneListJp = ["朝", "昼", "夜"];
 
   @override
   void initState() {
     super.initState();
     // レイアウト
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       feedBloc = FeedBloc(Provider.of<LoadingNotifier>(context, listen: false));
       //feedBloc
     });
@@ -40,7 +40,7 @@ class _FeedState extends State<Feed> {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
     setState(() {
-      _image = File(pickedFile.path);
+      _image = File(pickedFile!.path);
     });
   }
 
@@ -48,7 +48,7 @@ class _FeedState extends State<Feed> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-      _image = File(pickedFile.path);
+      _image = File(pickedFile!.path);
     });
   }
 
@@ -59,10 +59,10 @@ class _FeedState extends State<Feed> {
   String meal = '';
   String _timeFrame = '';
   String _meal = '';
-  String _condition = '';
-  String _fatigue = '';
-  String _appetite = '';
-  String _defecation = '';
+  String? _condition = '';
+  String? _fatigue = '';
+  String? _appetite = '';
+  String? _defecation = '';
 
   List<bool> stateList = [true, false, false];
 
@@ -72,7 +72,7 @@ class _FeedState extends State<Feed> {
 
   var formatter = new DateFormat('yyyy-MM-dd');
 
-  FeedBloc feedBloc;
+  late FeedBloc feedBloc;
 
   void feed() {
     if (meal.isEmpty) {
@@ -95,13 +95,13 @@ class _FeedState extends State<Feed> {
                   ),
                   Expanded(
                     flex: 16,
-                    child: FormBuilderRadioGroup(
+                    child: FormBuilderRadioGroup<String?>(
                       wrapAlignment: WrapAlignment.center,
-                      onChanged: (String text) {
+                      onChanged: (String? text) {
                         _timeFrame = EnumToString.convertToString(
                             TIME_ZONE.values[timeZoneListJp.indexOf(text)]);
                       },
-                      validator: (String text) {
+                      validator: (String? text) {
                         if (text == null) {
                           return ('どれかを選択してください');
                         }
@@ -128,7 +128,7 @@ class _FeedState extends State<Feed> {
                 onChanged: (String text) {
                   _meal = text;
                 },
-                validator: (String test) {
+                validator: (String? test) {
                   return null;
                 },
               ),
@@ -143,7 +143,7 @@ class _FeedState extends State<Feed> {
                       width: 300,
                       child: _image == null
                           ? Text('画像が選択されていません', textAlign: TextAlign.center)
-                          : Image.file(_image)),
+                          : Image.file(_image!)),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -204,10 +204,10 @@ class _FeedState extends State<Feed> {
                         flex: 16,
                         child: FormBuilderRadioGroup(
                           wrapAlignment: WrapAlignment.center,
-                          onChanged: (text) {
+                          onChanged: (dynamic text) {
                             _condition = text;
                           },
-                          validator: (String text) {
+                          validator: (String? text) {
                             if (text == null) {
                               return ('どれかを選択してください');
                             }
@@ -243,10 +243,10 @@ class _FeedState extends State<Feed> {
                     flex: 16,
                     child: FormBuilderRadioGroup(
                       wrapAlignment: WrapAlignment.center,
-                      onChanged: (text) {
+                      onChanged: (dynamic text) {
                         _fatigue = text;
                       },
-                      validator: (String text) {
+                      validator: (String? text) {
                         if (text == null) {
                           return ('どれかを選択してください');
                         }
@@ -280,10 +280,10 @@ class _FeedState extends State<Feed> {
                     flex: 16,
                     child: FormBuilderRadioGroup(
                       wrapAlignment: WrapAlignment.center,
-                      onChanged: (text) {
+                      onChanged: (dynamic text) {
                         _appetite = text;
                       },
-                      validator: (String text) {
+                      validator: (String? text) {
                         if (text == null) {
                           return ('どれかを選択してください');
                         }
@@ -319,10 +319,10 @@ class _FeedState extends State<Feed> {
                     flex: 16,
                     child: FormBuilderRadioGroup(
                       wrapAlignment: WrapAlignment.center,
-                      onChanged: (text) {
+                      onChanged: (dynamic text) {
                         _defecation = text;
                       },
-                      validator: (String text) {
+                      validator: (String? text) {
                         if (text == null) {
                           return ('どれかを選択してください');
                         }
@@ -496,9 +496,9 @@ class _FeedState extends State<Feed> {
                     fontWeight: FontWeight.bold,
                   )),
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
+                if (_formKey.currentState!.validate()) {
                   feedBloc.sendFeed(
-                      uid: FirebaseAuth.instance.currentUser.uid,
+                      uid: FirebaseAuth.instance.currentUser!.uid,
                       timeframe: _timeFrame,
                       meal: _meal,
                       condition: _condition,
@@ -507,7 +507,7 @@ class _FeedState extends State<Feed> {
                       defecation: _defecation);
 
                   // フォームの内容リセット
-                  _formKey.currentState.reset();
+                  _formKey.currentState!.reset();
                 }
               },
             ),

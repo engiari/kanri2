@@ -8,18 +8,18 @@ const String USER_BIRTH_STR =  "user_birth";
 const String USER_GROUP_STR =  "group_name";
 
 class SharedDataController {
-  static SharedPreferences _prefs;
+  static late SharedPreferences _prefs;
 
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> setData(LoginModel data) async {
-    await _prefs.setString(USER_ID_STR, data.userId);
-    await _prefs.setString(USER_NAME_STR, data.userName);
+    await _prefs.setString(USER_ID_STR, data.userId!);
+    await _prefs.setString(USER_NAME_STR, data.userName!);
     await _prefs.setString(USER_DOCUMENT_STR, data.userDocument);
     await _prefs.setString(USER_BIRTH_STR, data.userBirth);
-    await _prefs.setString(USER_GROUP_STR, data.groupName);
+    await _prefs.setString(USER_GROUP_STR, data.groupName!);
 
   }
 

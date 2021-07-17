@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app7/model/userData.dart';
 
 class AddGroup extends StatelessWidget {
-  final UserData data;
+  final UserData? data;
 
-  const AddGroup({Key key, this.data}) : super(key: key);
+  const AddGroup({Key? key, this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
-    return Text(data.email);
+    return Text(data!.email!);
   }
 }

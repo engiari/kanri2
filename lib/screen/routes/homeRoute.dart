@@ -21,7 +21,7 @@ class Home extends StatelessWidget {
         // padding: const EdgeInsets.all(8),
         children: <Widget>[
           Text(
-            FirebaseAuth.instance.currentUser.email,
+            FirebaseAuth.instance.currentUser!.email!,
             style: Theme.of(context).textTheme.headline4,
 
           ),

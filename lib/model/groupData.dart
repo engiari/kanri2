@@ -1,6 +1,6 @@
 class GroupData {
-  String documentPath;
-  String groupName;
+  String? documentPath;
+  String? groupName;
 
   GroupData({
     this.documentPath,

@@ -45,7 +45,7 @@ class Setting extends StatelessWidget {
           Container(
             // ユーザー情報を表示
             child: Text(
-              FirebaseAuth.instance.currentUser.email,
+              FirebaseAuth.instance.currentUser!.email!,
               style: Theme.of(context).textTheme.headline4,
             ),
           ),

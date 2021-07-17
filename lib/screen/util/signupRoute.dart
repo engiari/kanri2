@@ -27,7 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
     final userRegularController = TextEditingController();
     final targetWeightController = TextEditingController();
 
-    List<String> genderJp = ["男", "女"];
+    List<String?> genderJp = ["男", "女"];
 
     String gender = '';
 
@@ -109,13 +109,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       children: [
                         Text("性別"),
                         Expanded(
-                          child: FormBuilderRadioGroup(
+                          child: FormBuilderRadioGroup<String?>(
                           wrapAlignment: WrapAlignment.spaceEvenly,
-                          onChanged: (String text) {
+                          onChanged: (String? text) {
                             model.userGender = EnumToString.convertToString(
                                 GENDER.values[genderJp.indexOf(text)]);
                           },
-                          validator: (String text) {
+                          validator: (String? text) {
                             if (gender == null) {
                               return ('どれかを選択してください');
                             }
@@ -215,7 +215,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future _showDialog(
+  void _showDialog(
     BuildContext context,
     String title,
   ) {

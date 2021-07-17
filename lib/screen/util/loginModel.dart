@@ -5,11 +5,11 @@ import 'package:flutter_app7/screen/util/sharedDataController.dart';
 class LoginModel extends ChangeNotifier {
   String mail = '';
   String password = '';
-  String userId = '';
-  String userName = '';
+  String? userId = '';
+  String? userName = '';
   String userDocument = "";
   String userBirth = "";
-  String groupName;
+  String? groupName;
 
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
@@ -27,13 +27,13 @@ class LoginModel extends ChangeNotifier {
       email: mail,
       password: password,
     );
-    final uid = result.user.uid;
-    print(result.user.email);
+    final uid = result.user!.uid;
+    print(result.user!.email);
 
     // TODO 端末に保存
     await SharedDataController().setData(LoginModel()
-      ..userId = result.user.uid
-      ..userName = result.user.email
+      ..userId = result.user!.uid
+      ..userName = result.user!.email
     );
   }
 }

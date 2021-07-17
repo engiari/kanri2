@@ -37,11 +37,11 @@ class LoginBloc {
       });
       if (result == null || result.user == null) throw "ログインに失敗しました。";
 
-      FirebaseFirestore.instance.collection("user").where("uid", isEqualTo: result.user.uid).get().then((value) {
+      FirebaseFirestore.instance.collection("user").where("uid", isEqualTo: result.user!.uid).get().then((value) {
         // TODO 端末に保存
         SharedDataController().setData(LoginModel()
-          ..userId = result.user.uid
-          ..userName = result.user.email
+          ..userId = result.user!.uid
+          ..userName = result.user!.email
           ..userDocument = value.docs.first.id
         );
       });

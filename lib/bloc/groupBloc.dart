@@ -28,21 +28,21 @@ class GroupBloc {
     query
         .where("email",
         isEqualTo: searchEmail,
-        isNotEqualTo: FirebaseAuth.instance.currentUser.email)
+        isNotEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get()
         .then((value) {
       UserData userData = UserData(
-          uid: value.docs.first.data()['uid'],
-          displayName: value.docs.first.data()['displayName'],
-          email: value.docs.first.data()['email'],
-          groupName: value.docs.first.data()['groupName'],
+          uid: (value.docs.first.data() as Map<String, dynamic>)['uid'],
+          displayName: (value.docs.first.data() as Map<String, dynamic>)['displayName'],
+          email: (value.docs.first.data() as Map<String, dynamic>)['email'],
+          groupName: (value.docs.first.data() as Map<String, dynamic>)['groupName'],
           documentId: value.docs.first.id);
 
       controller.sink.add(userData);
     }).whenComplete(() => loading.setLoading(false));
   }
 
-  sendGroup({UserData userData}) async {
+  sendGroup({required UserData userData}) async {
     // TODO submit
     LoginModel data = SharedDataController().getData();
     final CollectionReference query =
@@ -59,15 +59,15 @@ class GroupBloc {
         .get();
 
     final List<dynamic> eachGroupList = [];
-    (myData.data()["groupList"] as List<dynamic>).forEach((e) {
-      eachGroupList.add((targetData.data()["groupList"] as List<dynamic>)
+    (myData.data()!["groupList"] as List<dynamic>).forEach((e) {
+      eachGroupList.add((targetData.data()!["groupList"] as List<dynamic>)
           .firstWhere((element) => e == element, orElse: () => null));
     });
     print("グループリストDocumentReference");
-    print(myData.data()["groupList"]);
+    print(myData.data()!["groupList"]);
 
     bool duplicate = false;
-    await Future.forEach(eachGroupList, (element) async {
+    await Future.forEach(eachGroupList, (dynamic element) async {
       if (element != null){
         final groupData = await (element as DocumentReference).get();
         if ((groupData.get("uidList")).length <= 2) {
@@ -88,7 +88,7 @@ class GroupBloc {
     } else {
       query
           .add({
-        'uidList': [FirebaseAuth.instance.currentUser.uid, userData.uid],
+        'uidList': [FirebaseAuth.instance.currentUser!.uid, userData.uid],
         'group_name': userData.groupName,
       })
 
@@ -113,16 +113,16 @@ class GroupBloc {
 
         */
       })
-          .then((value) => Fluttertoast.showToast(
+          .then(((value) => Fluttertoast.showToast(
           msg: "追加しました",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.blue,
           textColor: Colors.white,
-          fontSize: 16.0))
+          fontSize: 16.0)))
           .whenComplete(() => loading.setLoading(false))
-          .onError((error, stackTrace) => Fluttertoast.showToast(
+          .onError((dynamic error, stackTrace) => Fluttertoast.showToast(
           msg: "追加できませんでした",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
@@ -168,7 +168,7 @@ class GroupBloc {
     final myData = await query
         .get();
 
-    await Future.forEach((myData.data()["groupList"] as List<dynamic>), (element) async {
+    await Future.forEach(((myData.data() as Map<String, dynamic>)["groupList"] as List<dynamic>), (dynamic element) async {
       final data = await element.get();
       groupData.add(GroupData(documentPath: data.id, groupName: data.data()["group_name"]));
     });

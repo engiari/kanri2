@@ -14,7 +14,7 @@ class CustomContainerExample extends StatefulWidget {
 class _CustomContainerExampleState extends State<CustomContainerExample> {
   CollectionReference query = FirebaseFirestore.instance.collection('feed');
 
-  DiaryBloc diaryBloc;
+  late DiaryBloc diaryBloc;
 
   DateTime targetDay =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -24,7 +24,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
   void initState() {
     super.initState();
     // レイアウト
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       diaryBloc =
           DiaryBloc(Provider.of<LoadingNotifier>(context, listen: false));
       diaryBloc.getMonthData();
@@ -127,7 +127,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                   textColor: showDate.difference(targetDay).inDays == 0
                       ? Colors.white
                       : targetMonthDate.month == showDate.month
-                          ? setDayTextStyle()[showDate.weekday].color
+                          ? setDayTextStyle()[showDate.weekday]!.color
                           : Colors.grey,
                   onPressed: disable
                       ? null
@@ -156,8 +156,8 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
     );
   }
 
-  Widget _getHeader(DateTime targetDate, bool prevDisable, bool nextDisable,
-      DateTime currentMonth, Function() onLeftPressed, onRightPressed) {
+  Widget _getHeader(DateTime? targetDate, bool prevDisable, bool nextDisable,
+      DateTime? currentMonth, Function() onLeftPressed, onRightPressed) {
     // 月変更ボタン
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -170,7 +170,7 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                 },
           child: Icon(Icons.arrow_back_ios),
         ),
-        Text('${DateFormat.yM('ja').format(currentMonth)}'),
+        Text('${DateFormat.yM('ja').format(currentMonth!)}'),
         FlatButton(
           onPressed: nextDisable
               ? null
@@ -195,8 +195,8 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
         if (snapshot.connectionState == ConnectionState.done) {
 
 
-            if (snapshot.data.docs.isNotEmpty) {
-            Map<String, dynamic> data = snapshot.data.docs.first.data();
+            if (snapshot.data!.docs.isNotEmpty) {
+            Map<String, dynamic> data = snapshot.data!.docs.first.data() as Map<String, dynamic>;
             return Scaffold(
               body: Center(
                 child: Column(
@@ -209,15 +209,15 @@ class _CustomContainerExampleState extends State<CustomContainerExample> {
                           color: Colors.white,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: snapshot.data.docs
+                            children: snapshot.data!.docs
                                 .map((e) =>
                                 Text(
-                                    "時間帯: ${e.data()["timeframe"]}\n"
-                                        "食事メニュー: ${e.data()["meal"]}\n"
-                                        "体調: ${e.data()["condition"]}\n"
-                                        "疲労度: ${e.data()["fatigue"]}\n"
-                                        "食欲: ${e.data()["appetite"]}\n"
-                                        "便: ${e.data()["defecation"]}\n"),
+                                    "時間帯: ${(e.data() as Map<String, dynamic>)["timeframe"]}\n"
+                                        "食事メニュー: ${(e.data() as Map<String, dynamic>)["meal"]}\n"
+                                        "体調: ${(e.data() as Map<String, dynamic>)["condition"]}\n"
+                                        "疲労度: ${(e.data() as Map<String, dynamic>)["fatigue"]}\n"
+                                        "食欲: ${(e.data() as Map<String, dynamic>)["appetite"]}\n"
+                                        "便: ${(e.data() as Map<String, dynamic>)["defecation"]}\n"),
                             ).toList(),
                           ),
                         ),

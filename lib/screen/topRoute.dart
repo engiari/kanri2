@@ -12,7 +12,7 @@ class _TopState extends State<Top> {
   void initState() {
     super.initState();
     if (FirebaseAuth.instance.currentUser != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.of(context)
+      WidgetsBinding.instance!.addPostFrameCallback((_) => Navigator.of(context)
           .pushReplacementNamed("/home_route"));
     }
   }
@@ -65,7 +65,7 @@ class _TopState extends State<Top> {
                       child: RaisedButton(
                         onPressed: () {
                           //FirebaseCrashlytics.instance.crash();
-                          Navigator.of(context).pushNamedAndRemoveUntil("/login_route", ModalRoute.withName(null));
+                          Navigator.of(context).pushNamedAndRemoveUntil("/login_route", (_) => false);
                         },
                         child: Text('ログイン'),
                       ),
@@ -97,7 +97,7 @@ class _TopState extends State<Top> {
                       child: RaisedButton(
                         onPressed: () {
                           //FirebaseCrashlytics.instance.crash();
-                          Navigator.of(context).pushNamedAndRemoveUntil("/signup_route", ModalRoute.withName(null));
+                          Navigator.of(context).pushNamedAndRemoveUntil("/signup_route", (_) => false);
                         },
                         child: Text('新規登録'),
                       ),

@@ -13,14 +13,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class ChatBloc {
   // DatabaseReference という型を定義
-  DatabaseReference _notesReference;
+  late DatabaseReference _notesReference;
 
   final StreamController<List<ChatDataModel>> _sendStream = StreamController<
       List<ChatDataModel>>();
   final StreamController<
       List<ChatDataModel>> sendResultStream = StreamController<
       List<ChatDataModel>>();
-  final StreamController<String> getUserNameStream = StreamController<String>();
+  final StreamController<String?> getUserNameStream = StreamController<String?>();
 
   // List<ChatDataModel>型の chatModelList に空の配列を定義
   List<ChatDataModel> chatModelList = [];
@@ -74,7 +74,7 @@ class ChatBloc {
       .doc(data.userDocument)
       .get();
 
-  String myUserName = userName.data()["userName"];
+  String? myUserName = userName.data()!["userName"];
 
   getUserNameStream.sink.add(myUserName);
 

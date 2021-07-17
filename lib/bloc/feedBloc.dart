@@ -46,7 +46,7 @@ class FeedBloc {
             backgroundColor: Colors.blue,
             textColor: Colors.white,
             fontSize: 16.0))
-        .onError((error, stackTrace) => Fluttertoast.showToast(
+        .onError((dynamic error, stackTrace) => Fluttertoast.showToast(
             msg: "送信失敗しました",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,

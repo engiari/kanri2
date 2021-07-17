@@ -3,11 +3,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Tile extends StatelessWidget {
 
-  IconData icon;
-  String username;
-  String message;
+  IconData? icon;
+  String? username;
+  String? message;
 
-  Tile({IconData icon, String username, String message}) {
+  Tile({IconData? icon, String? username, String? message}) {
     this.icon = icon;
     this.username = username;
     this.message = message;
@@ -25,8 +25,8 @@ class Tile extends StatelessWidget {
             child: Icon(this.icon), // <- 追加：アイコンの設定
             backgroundColor: Colors.pink,
           ),
-          title: Text(this.username), // <- 追加：ユーザ名の設定
-          subtitle: Text(this.message), // <- 追加：メッセージの設定
+          title: Text(this.username!), // <- 追加：ユーザ名の設定
+          subtitle: Text(this.message!), // <- 追加：メッセージの設定
           onTap: () => {
             /*
             Navigator.push(

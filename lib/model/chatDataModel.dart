@@ -5,10 +5,10 @@ ChatDataModel chatDataModelFromSnapShot(DataSnapshot data) => ChatDataModel.from
 ChatDataModel chatDataModelFromMap(Map<dynamic, dynamic> data) => ChatDataModel.fromMap(data);
 
 class ChatDataModel {
-  String userUid;
-  String userName;
-  DateTime date;
-  String message;
+  String? userUid;
+  String? userName;
+  DateTime? date;
+  String? message;
 
   ChatDataModel({
     this.userUid,
@@ -21,7 +21,7 @@ class ChatDataModel {
   Map<String, dynamic> toJson() => <String, dynamic>{
     "userUid": userUid,
     "userName": userName,
-    "dateTime": date.toLocal().toIso8601String(),
+    "dateTime": date!.toLocal().toIso8601String(),
     "message": message,
   };
 

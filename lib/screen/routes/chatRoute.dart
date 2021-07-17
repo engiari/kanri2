@@ -17,9 +17,9 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Chat extends StatefulWidget {
-  String chatGroupPath;
+  String? chatGroupPath;
 
-  String title;
+  String? title;
 
   Chat(this.chatGroupPath);
 
@@ -31,35 +31,35 @@ class _ChatState extends State<Chat> {
   final StreamController<String> getUserNameStream = StreamController<String>();
 
   // FirebaseAuthenticationからuidを取得して userUid に入れる
-  final String userUid = FirebaseAuth.instance.currentUser.uid;
+  final String userUid = FirebaseAuth.instance.currentUser!.uid;
 
   // ChatBloc という場所を用意して initState の中身を入れる
-  ChatBloc bloc;
+  ChatBloc? bloc;
 
   // chatデータを扱う配列
   List<ChatDataModel> message = [];
 
   // 送信するメッセージのテキスト保持
-  String sendMessage;
+  String? sendMessage;
 
   // テキストエリアのコントロール
   final _controller = TextEditingController();
 
-  String userName;
+  String? userName;
 
-  String myUserName;
+  String? myUserName;
 
   //  initState() という関数内でBlocのデータを受け取る
   void initState() {
     super.initState();
-    bloc = ChatBloc(widget.chatGroupPath);
+    bloc = ChatBloc(widget.chatGroupPath!);
     // .listen((_){}); を使うと処理部分でBlocのデータを受け取れる
     // ※受信したデータも送信時と同じ流れでチャット欄に表示
     // WidgetsBinding.instance.addPostFrameCallback((_){}); でレイアウトが表示された後に実行する
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       //bloc.getMessege();
 
-      bloc.getUserName();
+      bloc!.getUserName();
       /*
       print("chatBlocからchatRouteで受け取ったユーザー名1");
       print(myUserName);
@@ -84,7 +84,7 @@ class _ChatState extends State<Chat> {
       print("chatRouteから送信ユーザー名");
       print(myUserName);
 
-      bloc.send(sendData);
+      bloc!.send(sendData);
       // TextFieldの入力文字を初期化
       _controller.clear();
       // 送信するメッセージを保持していた sendMessage に null を入れる（送信した後のため）
@@ -94,10 +94,10 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<ChatBloc>(
+    return Provider<ChatBloc?>(
       // (_)パラメータを使わないことの明示
       create: (_) => bloc,
-      dispose: (_, bloc) => bloc.dispose(),
+      dispose: (_, bloc) => bloc!.dispose(),
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
@@ -107,13 +107,13 @@ class _ChatState extends State<Chat> {
 
               Container(
                 // chatBlocからユーザー名の受け取り
-                child: StreamBuilder<String>(
-                    stream: bloc.getUserNameStream.stream,
+                child: StreamBuilder<String?>(
+                    stream: bloc!.getUserNameStream.stream,
                     builder: (context, snapshot) {
                       myUserName = snapshot.data;
                       print("chatBlocからchatRouteで受け取ったユーザー名2");
                       print(myUserName);
-                      return Text(myUserName);
+                      return Text(myUserName!);
                     }),
               ),
 
@@ -123,7 +123,7 @@ class _ChatState extends State<Chat> {
                   // StreamBuilder：Blocから受け取ったデータをレイアウトで表示させる時の要素
                   // StreamBuilder<Blocから送られてくるデータの形（この場合：List<ChatDataModel>）>
                   child: StreamBuilder<List<ChatDataModel>>(
-                      stream: bloc.sendResultStream.stream,
+                      stream: bloc!.sendResultStream.stream,
                       builder: (context, snapshot) {
 
                         // snapshot にデータがあった場合 ListView の中身を返す
@@ -137,7 +137,7 @@ class _ChatState extends State<Chat> {
 
                             // message変数の中のデータをリスト表示（ListView Widget）
                             // .reversed で snapshot.data の map を降順にソート
-                            children: snapshot.data.reversed
+                            children: snapshot.data!.reversed
                                 .map(
                                   (e) => Row(
                                     children: [
@@ -165,7 +165,7 @@ class _ChatState extends State<Chat> {
                                           // それ以外
                                           child: ListTile(
                                             title: Text(
-                                              e.message,
+                                              e.message!,
                                               style: TextStyle(
                                                 color: e.userUid == userUid
                                                     ? Colors.white // 一致

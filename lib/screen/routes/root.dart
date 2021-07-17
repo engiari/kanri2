@@ -12,7 +12,7 @@ import 'settingRoute.dart';
 // 各ページ
 
 class RootWidget extends StatefulWidget {
-  RootWidget({Key key}) : super(key: key);
+  RootWidget({Key? key}) : super(key: key);
 
   @override
   _RootWidgetState createState() => _RootWidgetState();
@@ -40,7 +40,7 @@ class _RootWidgetState extends State<RootWidget> {
     'お知らせ',
     '設定',
   ];
-  String _token;
+  String? _token;
 
   var _routes = [
     Home(),
@@ -78,7 +78,8 @@ class _RootWidgetState extends State<RootWidget> {
         _footerIcons[index],
         color: Colors.black26,
       ),
-      label: _footerItemNames[index] ?? "",
+      //label: _footerItemNames[index] ?? "",
+      label: _footerItemNames[index],
     );
   }
 

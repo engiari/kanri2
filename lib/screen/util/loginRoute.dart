@@ -11,7 +11,7 @@ class LoginPage extends StatelessWidget {
   final passwordController = TextEditingController();
   String _mail = "";
   String _password = "";
-  LoginBloc bloc;
+  LoginBloc? bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +27,17 @@ class LoginPage extends StatelessWidget {
           },
         ),
       ),
-      body: Provider<LoginBloc>(
+      body: Provider<LoginBloc?>(
         create: (context) => bloc,
 
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: StreamBuilder(
-            stream: bloc.controller.stream,
+          child: StreamBuilder<bool>(
+            stream: bloc!.controller.stream,
             builder: (context, snapshot) {
               Widget errorWidget = Container();
-              if (snapshot.hasError) errorWidget = Text(snapshot.error);
-              if (!snapshot.hasData || !snapshot.data)
+              if (snapshot.hasError) errorWidget = Text(snapshot.error as String);
+              if (!snapshot.hasData || !snapshot.data!)
                 return Column(
                   children: <Widget>[
                     errorWidget,
@@ -65,7 +65,7 @@ class LoginPage extends StatelessWidget {
                       onPressed: () async {
                         print(_mail);
                         print(_password);
-                        bloc.login(_mail, _password);
+                        bloc!.login(_mail, _password);
                       },
                     ),
                   ],

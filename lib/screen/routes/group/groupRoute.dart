@@ -11,9 +11,6 @@ import '../chatRoute.dart';
 enum TYPE { home, search }
 
 class Group extends StatefulWidget {
-  const Group({Key key, @required this.app}) : super(key: key);
-
-  final FirebaseApp app;
 
   @override
   _GroupState createState() => _GroupState();
@@ -31,14 +28,14 @@ class _GroupState extends State<Group> {
   String searchGroup = '';
   String error = '';
   String groupName = '';
-  String showGroupChat;
-  GroupBloc groupBloc;
+  String? showGroupChat;
+  GroupBloc? groupBloc;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      groupBloc.searchGroup();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      groupBloc!.searchGroup();
     });
   }
 
@@ -103,21 +100,21 @@ class _GroupState extends State<Group> {
                       setState(() {
                         error = "";
                       });
-                      groupBloc.searchUser(searchEmail);
+                      groupBloc!.searchUser(searchEmail);
                     },
                   ),
                   StreamBuilder<UserData>(
-                    stream: groupBloc.controller.stream,
+                    stream: groupBloc!.controller.stream,
                     builder: (context, snapshot) {
                       Widget errorWidget = Container();
                       if (snapshot.hasError)
-                        errorWidget = Text(snapshot.error,
+                        errorWidget = Text(snapshot.error as String,
                             style: TextStyle(color: Colors.red));
                       if (snapshot.hasData)
                         return Column(
                           children: [
                             Text("一致したメールアドレス"),
-                            Text(snapshot.data.email,
+                            Text(snapshot.data!.email!,
                                 style: TextStyle(color: Colors.red)),
                             TextField(
                               decoration: InputDecoration(
@@ -130,8 +127,8 @@ class _GroupState extends State<Group> {
                             ),
                             TextButton(
                               onPressed: () {
-                                snapshot.data.groupName = groupName;
-                                groupBloc.sendGroup(userData: snapshot.data);
+                                snapshot.data!.groupName = groupName;
+                                groupBloc!.sendGroup(userData: snapshot.data!);
                                 //print("data");
                                 //print(snapshot.data.email);
                               },
@@ -161,7 +158,7 @@ class _GroupState extends State<Group> {
                   ),
 
                   StreamBuilder<List<GroupData>>(
-                    stream: groupBloc.groupListController.stream,
+                    stream: groupBloc!.groupListController.stream,
                     builder: (context, snapshot) {
                       //print(snapshot.data);
                       if (snapshot.hasError) return Text("error");
@@ -181,14 +178,14 @@ class _GroupState extends State<Group> {
                                 //children: snapshot.data.map((dynamic e) => Text(e.toString())).toList(),
                                 //children: groupBloc.searchGroup(searchGroup),
 
-                                children: snapshot.data
+                                children: snapshot.data!
                                     .map((GroupData e) => TextButton(
                                         onPressed: () {
                                           setState(() {
                                             showGroupChat = e.documentPath;
                                           });
                                         },
-                                        child: Text(e.groupName,
+                                        child: Text(e.groupName!,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 30.0,

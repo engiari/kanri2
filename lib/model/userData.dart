@@ -1,11 +1,11 @@
 class UserData {
-  String uid;
-  String displayName;
-  String email;
-  String thumbnailUrl;
-  String documentId;
-  String groupName;
-  String userName;
+  String? uid;
+  String? displayName;
+  String? email;
+  String? thumbnailUrl;
+  String? documentId;
+  String? groupName;
+  String? userName;
 
   UserData({
       this.uid,
