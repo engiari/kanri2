@@ -32,9 +32,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 // クラッシュレポート
 Future<void> main() async {
+  await Firebase.initializeApp();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   await SharedDataController.init();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   _firebaseMessaging.requestPermission(
