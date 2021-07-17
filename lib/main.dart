@@ -14,7 +14,7 @@ import 'package:flutter_app7/screen/util/signupRoute.dart';
 import 'package:flutter_app7/screen/topRoute.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-
+/*
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
@@ -30,12 +30,15 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("バックグラウンドでメッセージを受け取りました");
 }
 
+
+ */
 // クラッシュレポート
 Future<void> main() async {
-  await Firebase.initializeApp();
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  //FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await SharedDataController.init();
+  /*
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   _firebaseMessaging.requestPermission(
     sound: true,
@@ -64,6 +67,8 @@ Future<void> main() async {
           ));
     }
   });
+
+   */
   runZonedGuarded(() {
     runApp(App());
   }, (error, stackTrace) {
