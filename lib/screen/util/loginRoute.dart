@@ -65,6 +65,8 @@ class LoginPage extends StatelessWidget {
                       onPressed: () async {
                         print(_mail);
                         print(_password);
+
+                        // true の判定、画面遷移のコードを書く　ヒント：非同期
                         bloc!.login(_mail, _password);
                       },
                     ),

@@ -59,6 +59,7 @@ dependencies:
   http: ^0.13.3
   # ライセンス表示
   package_info: ^2.0.2
+  firebase_storage: ^10.0.1
 
 
 

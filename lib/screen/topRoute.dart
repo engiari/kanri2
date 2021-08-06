@@ -11,10 +11,7 @@ class _TopState extends State<Top> {
   @override
   void initState() {
     super.initState();
-    if (FirebaseAuth.instance.currentUser != null) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) => Navigator.of(context)
-          .pushReplacementNamed("/home_route"));
-    }
+
   }
 
   @override
@@ -47,6 +44,7 @@ class _TopState extends State<Top> {
               ),
               Container(
                 child: Image.asset('images/top_vegetables.jpg'),
+                //child: Image.network('https://.jpg'),
                 // 内側余白
                 padding: EdgeInsets.all(0),
                 // 外側余白

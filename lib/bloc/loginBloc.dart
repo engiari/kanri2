@@ -12,15 +12,15 @@ class LoginBloc {
 
   LoginBloc(this.loading);
 
-  Future login(String mail, String password) async {
+  Future<bool> login(String mail, String password) async {
     if (mail.isEmpty) {
       controller.sink.addError('メールアドレスを入力してください');
-      return;
+      return false;
     }
 
     if (password.isEmpty) {
       controller.sink.addError('パスワードを入力してください');
-      return;
+      return false;
     }
 
     print(mail);
@@ -46,12 +46,14 @@ class LoginBloc {
         );
       });
 
-      controller.sink.add(true);
+      //controller.sink.add(true);
       loading.setLoading(false);
+      return true;
     } catch (e) {
       // print("llllllllllll");
       loading.setLoading(false);
-      controller.sink.addError(e);
+      //controller.sink.addError(e);
+      return false;
     }
   }
 }
